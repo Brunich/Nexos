@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXOS: FRACTURA — Biblia v1.4</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Space+Mono:wght@400;700&display=swap');
+
+  :root {
+    --bg: #0d0d14;
+    --surface: #13131f;
+    --card: #1a1a2e;
+    --accent: #7c6af7;
+    --accent2: #c084fc;
+    --gold: #f59e0b;
+    --teal: #2dd4bf;
+    --danger: #f87171;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --border: #2d2d45;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Text', serif;
+    font-size: 18px;
+    line-height: 1.75;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: rgba(13,13,20,0.94);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    height: 52px;
+  }
+  nav .brand {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  nav a {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+  nav a:hover { color: var(--accent2); }
+
+  .hero {
+    margin-top: 52px;
+    padding: 5rem 2rem 4rem;
+    text-align: center;
+    background: linear-gradient(160deg, #0d0d14 0%, #1a0d2e 50%, #0d1a2e 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero .tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 50%, var(--teal) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+  .hero .sub {
+    color: var(--muted);
+    font-size: 1rem;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 0.08em;
+    margin-bottom: 2rem;
+  }
+
+  .container { max-width: 860px; margin: 0 auto; padding: 3rem 2rem; }
+
+  .part-header {
+    text-align: center;
+    padding: 4rem 2rem 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .part-header .part-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .part-header h2 { font-size: 2rem; font-weight: 600; }
+
+  h2.sec {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent2);
+    margin: 2.5rem 0 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  p { margin-bottom: 1rem; }
+
+  blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.9rem 1.4rem;
+    margin: 1.5rem 0;
+    background: rgba(124,106,247,0.07);
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+    color: var(--accent2);
+    font-size: 1.05rem;
+  }
+
+  /* ── TABLE ── */
+  .tbl-wrap { overflow-x: auto; margin: 1.5rem 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+  th {
+    background: var(--card);
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.7rem 1rem;
+    text-align: left;
+    border-bottom: 2px solid var(--accent);
+  }
+  td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  td:first-child { color: var(--gold); font-weight: 600; white-space: nowrap; }
+
+  /* ── PERSONAJE CARD ── */
+  .char-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.25rem 0;
+  }
+  .char-card .char-header {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.25rem;
+  }
+  .char-card .char-role {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 1rem;
+    font-family: 'Space Mono', monospace;
+  }
+  .char-card p { font-size: 0.97rem; margin-bottom: 0.75rem; }
+  .char-card blockquote { margin: 0.75rem 0 0; font-size: 0.92rem; }
+
+  /* ── FINALE ── */
+  .finale {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem 1.5rem;
+    margin: 0.9rem 0;
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+  .finale .fin-id {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.4;
+  }
+  .finale .fin-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.35rem; }
+  .finale .fin-req {
+    font-size: 0.75rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+  .finale p { font-size: 0.94rem; margin: 0; color: var(--muted); }
+
+  /* ── BOND ── */
+  .bond-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 1.5rem 0; }
+  .bond-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.25rem;
+  }
+  .bond-card.lo { border-top: 3px solid var(--danger); }
+  .bond-card.hi { border-top: 3px solid var(--teal); }
+  .bond-card .bl {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .bond-card.lo .bl { color: var(--danger); }
+  .bond-card.hi .bl { color: var(--teal); }
+  .bond-card p { font-size: 0.93rem; margin: 0; }
+
+  /* ── LIST ── */
+  .diff-list { list-style: none; margin: 1rem 0; }
+  .diff-list li {
+    padding: 0.6rem 0 0.6rem 2rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    font-size: 0.97rem;
+  }
+  .diff-list li::before {
+    content: counter(li);
+    counter-increment: li;
+    position: absolute;
+    left: 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    top: 0.65rem;
+  }
+  .diff-list { counter-reset: li; }
+
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); margin: 3rem 0; }
+
+  footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    border-top: 1px solid var(--border);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  @media (max-width: 600px) {
+    .bond-grid { grid-template-columns: 1fr; }
+    .finale { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="brand">NEXOS: FRACTURA</span>
+  <a href="#promesa">Promesa</a>
+  <a href="#mundo">Mundo</a>
+  <a href="#personajes">Personajes</a>
+  <a href="#estructura">Estructura</a>
+  <a href="#finales">Finales</a>
+  <a href="#roadhero">Road of the Hero</a>
+</nav>
+
+<header class="hero">
+  <p class="tag">IndieStudio Brunich · Biblia + Road of the Hero · v2.1</p>
+  <h1>NEXOS: FRACTURA</h1>
+  <p class="sub">Continente: Piélago · Legendario: Echonis</p>
+</header>
+
+<!-- ══════════════════════════════════
+     BIBLIA RESUMIDA
+══════════════════════════════════════ -->
+<div class="container">
+
+  <!-- LA PROMESA -->
+  <h2 id="promesa" class="sec">La Promesa</h2>
+  <p>Este juego hace lo que ciertas compañías no quieren hacer.</p>
+  <p>Un sistema construido sobre ideas culturales distintas y el choque de estas, y sobre la decisión de Nix, una chica de 17 años que tiene que decidir el rumbo de la región — si destruirlo, preservarlo, cambiarlo, o elegir alguna. Sus decisiones dejarán huella en el mundo y en los NPCs, cambiando su forma de pensar según tus acciones en cada paso por sus regiones.</p>
+
+  <!-- EL MUNDO -->
+  <h2 id="mundo" class="sec">El Mundo — Continente Piélago</h2>
+  <p>Un continente mediterráneo con un archipiélago central y regiones distintas entre sí. La Liga tiene su sede en el Piélago Central. Islas conectadas por teleférico, mercados ruidosos, volcanes dormidos en el norte.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Región</th><th>Tipo</th><th>Descripción + Guardianes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>El Piélago Central</td><td>Central</td><td>Zona inicial del juego. Cálido, mediterráneo. Sede de la Liga y de <strong>La Cumbre</strong>, donde reside Aldric. Sin Guardianes — es el punto de partida y el destino final.</td></tr>
+        <tr><td>Levante</td><td>Nigromantes</td><td>Origen de Nix y Nora Vega. 2 Guardianes: <em>El Templo del Respeto</em> (honrar a los muertos) y <em>La Cripta del Control</em> (disciplinar a los espectros).</td></tr>
+        <tr><td>Zenera</td><td>Volcánica</td><td>Tecnología de la Liga. 2 Guardianes: <em>La Forja</em> (volcán activo controlado) y <em>Las Ruinas</em> (civilización antigua, nexos del Evento Echonis).</td></tr>
+        <tr><td>Coralia</td><td>Oceánica</td><td>Mar profundo, arrecifes. 2 Guardianes: <em>El Arrecife</em> (equilibrio, vida marina) y <em>El Abismo</em> (lo que la Liga no quiere que exista).</td></tr>
+        <tr><td>Nora «la polvosa»</td><td>Desierto</td><td>Inspirada en Reynosa y Tamaulipas. HONOR, RESPETO, MORAL. 2 Guardianes: <em>El Presidio</em> (poder y supervivencia) y <em>La Hacienda</em> (honor y legado Vega).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Cada región tiene 2 Guardianes que representan las dos caras de su cultura. El jugador entiende la utopía y el conflicto de cada región a través de ellos. En Piélago Central no hay Guardianes — solo La Cumbre, donde espera Aldric.</p>
+
+  <!-- ECHONIS -->
+  <h2 class="sec">Echonis — El Legendario</h2>
+  <p>Echonis no ataca. No destruye. Absorbe parte de los recuerdos de los seres vivos y muertos de su alrededor y los redistribuye por un tiempo. Solo lo hace permanente a ciertos individuos o nexos elegidos: los Primordiales.</p>
+  <p>Echonis lo hace con cierta intención de tener compañeros parecidos a él, pero también para que los nexos igualen sus posibilidades ante la ventaja humana.</p>
+  <p>En el juego, Echonis es un jefe pero no el final. Aparece en silencio, en momentos clave de la historia. Su sola presencia hace que los nexos del equipo se comporten diferente según su vínculo con el jugador.</p>
+  <p><strong>Efecto en el mundo:</strong> cuando Echonis aparece en una región, los nexos salvajes de toda esa zona aumentan su nivel temporalmente. Las rutas se vuelven más peligrosas. El jugador lo nota sin que nadie lo explique.</p>
+
+  <!-- LOS PRIMORDIALES -->
+  <h2 class="sec">Los Primordiales — El Secreto</h2>
+  <p>Los Primordiales son nexos con consciencia equivalente a la humana. No son animales inteligentes. Son otra clase de nexos.</p>
+  <p>La Dra. Nora Vega descubrió durante el Evento Echonis que ciertos nexos — los Primordiales — poseían inteligencia equivalente a la humana. No eran animales inteligentes. Eran otra clase de nexos.</p>
+  <p>El Campeón Aldric tomó la decisión: enterrar la investigación para evitar que el conflicto destruyera el Archipiélago. Declaró a la Dra. Vega «desequilibrada», destruyó los archivos, y construyó la paz sobre el secreto.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>El Secreto</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr><td>¿Cuántos quedan?</td><td>Muy pocos. El Evento creó un primer grupo hace 50 años. Algunos fueron «estudiados» por la Liga y nunca regresaron. Los que quedan libres viven en lugares alejados con humanos que saben la verdad.</td></tr>
+        <tr><td>¿Por qué nadie los entiende?</td><td>Los Primordiales no hablan el idioma humano. Se comunican con señas, comportamientos, formas de actuar que la gente interpreta como «comportamiento animal avanzado». Solo quien los conoce de verdad entiende que es lenguaje.</td></tr>
+        <tr><td>El secreto real</td><td>La gente no quiere entenderlo. Es más fácil ver un nexo inteligente y pensar «qué listo está hoy» que aceptar lo que eso implica.</td></tr>
+        <tr><td>Los últimos conocidos</td><td>El nexo de Nora Vega (memoria de todo el Evento). Un nexo primordial en ruinas del Piélago. Un nexo que sigue a Nix desde el Acto 1. Un grupo pequeño en Levante tratado como espíritus guardianes.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- EL PACTO -->
+  <h2 class="sec">El Pacto de Nora — La Mentira Fundacional</h2>
+  <p>La Dra. Nora Vega descubrió durante el Evento que los Primordiales poseían inteligencia equivalente a la humana. El Campeón Aldric tomó la decisión: enterrar la investigación. Declaró a Nora Vega «desequilibrada», destruyó los archivos, construyó la paz sobre el secreto.</p>
+  <p>Al final la gente no le creyó a Vega. Fue más fácil seguir cómodos, y creer que sin pruebas no había nada que hacer.</p>
+  <p>Ambos vienen de Levante. En Levante, enterrar la verdad tiene un nombre: traición a los muertos. Aldric lo sabe. Por eso no duerme.</p>
+  <blockquote>«El villano tiene razón en algo importante. Su método fue terrible. Su motivación era comprensible. Eso es lo que hace difícil derrotarlo.»</blockquote>
+
+  <!-- BOND -->
+  <h2 class="sec">Sistema de Vínculo — Bond Score</h2>
+  <p>El vínculo es un extra — no rompe el balance. Afecta el combate de forma real pero no es obligatorio optimizarlo.</p>
+
+  <div class="bond-grid">
+    <div class="bond-card lo">
+      <div class="bl">Bond Bajo (&lt;30) — Fuerza sin control</div>
+      <p>Los ataques hacen más daño. Pero el nexo se daña a sí mismo al final de cada turno. No es incorrecto jugar así. Pero lo notas.</p>
+    </div>
+    <div class="bond-card hi">
+      <div class="bl">Bond Alto (&gt;70) — Confianza y precisión</div>
+      <p>Menos probabilidad de fallar. Velocidad aumentada. HP máximo aumentado ligeramente. Gestos únicos en animaciones de batalla.</p>
+    </div>
+  </div>
+
+  <blockquote>El jugador lo descubre por el comportamiento del nexo, no por tutorial.</blockquote>
+
+  <p><strong>Dificultad:</strong> Hay personajes en la historia que son más desarrollados que Nix en 2 puntos de la historia — podrían considerarse jefes imbatibles. El curso normal es perder ante ellos. Si el jugador los derrota, el juego registra que está superando su nivel esperado y ajusta la dificultad hacia arriba en todos los encuentros futuros hasta el siguiente jefe imbatible, para ver si la conservas. Sin menú de dificultad — se construye con las decisiones, perseverancia e inteligencia del jugador.</p>
+
+  <!-- PERSONAJES -->
+  <h2 id="personajes" class="sec">Personajes Principales</h2>
+
+  <div class="char-card">
+    <div class="char-header">Nix · 17 años · Levante</div>
+    <div class="char-role">Protagonista</div>
+    <p>Inteligente, curiosa, mala con los timings. Su filtro social no funciona — dice lo que piensa y da más detalles de lo necesario, dice exactamente lo que piensa en el peor momento posible, con personajes principales solamente. En batalla cambia, se calla: sabe que es buena y disfruta resolver problemas cuando es a base de peleas, puesto que siempre gana. Orgullo genuino en cómo enfrenta rivales difíciles (habrá un comentario diferente a partir de las especificaciones del equipo del jugador). Sin sueños predefinidos — el jugador los elige sin darse cuenta. Llegó al Piélago Central de niña cuando se firmó el Pacto.</p>
+    <p><em>Mecánica: antes de cada boss, el jugador elige entre varias frases. Todas son imprudentes. Solo cambia ese intercambio, no la historia principal.</em></p>
+  </div>
+
+  <div class="char-card">
+    <div class="char-header">Kai · 18 años · Piélago Central (criado)</div>
+    <div class="char-role">Rival</div>
+    <p>Nieto de Aldric. Se conocen desde la infancia — crecieron en el mismo barrio. No son extraños; son dos personas que se conocen demasiado bien. Entrenado para ser Campeón, aunque nunca lo ha querido. Su nexo compañero es de Levante, con alta sensibilidad a las emociones. El nexo claramente lo conoce y le preocupa más de lo que Kai admite.</p>
+    <p>Lo que Kai no sabe: su nexo es un eco creado con energía de Echonis — el original murió hace 15 años.</p>
+    <blockquote>«Mi nexo lleva semanas sin dormir bien. No sé qué ve cuando me mira.»</blockquote>
+  </div>
+
+  <div class="char-card">
+    <div class="char-header">Aldric · 70 años · Levante</div>
+    <div class="char-role">Campeón / Antagonista</div>
+    <p>El hombre más controlado del juego. 50 años como Campeón. Lleva 10 años buscando a alguien a quien pasarle la responsabilidad de decidir qué hacer con la verdad. Diseño: canas plateadas impecables, ropa oscura con detalle dorado, siempre lleva guantes (cicatrices). Su nexo-espada nunca está en su cápsula — flota siempre detrás y a la izquierda.</p>
+    <blockquote>«Sí, enterré la verdad. Piélago existe porque tomé esa decisión.»</blockquote>
+  </div>
+
+  <div class="char-card">
+    <div class="char-header">Dra. Nora Vega · 70 años · Levante</div>
+    <div class="char-role">La Abuela</div>
+    <p>Acto 1: una historia. Acto 2: notas y fragmentos. Acto 3: está viva. 50 años en una isla con nexos Primordiales que eligieron quedarse con ella. Su nexo principal tiene memoria de todo el Evento. Cuando Nix lo conoce, la reconoce de una forma que no puede ser coincidencia.</p>
+    <blockquote>«No vine a darte respuestas. Vine a asegurarme de que tenías las preguntas correctas.»</blockquote>
+  </div>
+
+  <!-- LOS 4 INICIALES -->
+  <h2 class="sec">Los Cuatro Iniciales — Uno de Cada Región</h2>
+  <p>Cada región del continente tiene un nexo inicial diferente. El Sabio del Piélago presenta los cuatro al inicio del viaje — Nix elige uno, y Kai elige el que tenga ventaja de tipo contra el de Nix (no por rivalidad, por costumbre). Los otros dos se distribuyen a guías del Piélago que el jugador conocerá más adelante.</p>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Inicial</th><th>Región</th><th>Tipo</th><th>Descripción</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Embral</td><td>Levante</td><td>Fuego/Espectro</td><td>Un perro pequeño con llama interna visible — como una vela que parpadea detrás de sus costillas. En Levante dicen que los Embral guían a los muertos en las noches de celebración. Es leal hasta la obsesión. Su Despertar (Embralcinder) revela que la llama siempre fue un nexo espectral simbiótico viviendo dentro de él.</td></tr>
+        <tr><td>Coralín</td><td>Coralia</td><td>Agua/Veneno</td><td>Un nexo anfibio con piel de coral vivo. Cambia de color según la salud del agua — rosa en agua limpia, gris en agua contaminada. Los pescadores de Coralia los usan como indicador natural. Tranquilo, observador. Su Despertar (Coralión) le permite generar un arrecife temporal en batalla que absorbe daño.</td></tr>
+        <tr><td>Chispón</td><td>Zenera</td><td>Eléctrico/Roca</td><td>Un lagarto volcánico con cristales conductores en el lomo. En Zenera los usan para alimentar generadores pequeños. Inquieto, impaciente, siempre cargado. Si se emociona, las chispas saltan y queman cosas cercanas. Su Despertar (Voltacán) fusiona lava y electricidad — los cristales se vuelven rojos.</td></tr>
+        <tr><td>Nopálito</td><td>Nora la Polvosa</td><td>Planta/Tierra</td><td>Un nexo con cuerpo de nopal joven — espinas suaves, una flor que se abre cuando confía en su guía, y raíces que puede extender para buscar agua subterránea. En Nora, tener un Nopálito es señal de que sabes sobrevivir con poco. Su Despertar (Nopalón) lo convierte en una fortaleza espinosa con la flor completamente abierta — hermoso y peligroso.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><strong>Diseño intencional:</strong> Cada inicial refleja la cultura de su región. Embral es muerte y lealtad (Levante). Coralín es observación y ecosistema (Coralia). Chispón es energía e impaciencia (Zenera). Nopálito es resistencia y confianza (Nora). El jugador elige una filosofía de vida sin saberlo.</p>
+
+  <!-- ESTRUCTURA -->
+  <h2 id="estructura" class="sec">Estructura — 8 Guardianes + La Cumbre en 4 Actos</h2>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th>Acto</th><th>Descripción</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Acto 1<br>Piélago Central<br>0 Guardianes</td>
+          <td>El juego parece un juego de nexos normal. Nix recibe su primer nexo, conoce a Kai. Las señales son sutiles: alguien cambia el tema al mencionar a la abuela de Nix, un NPC nombra el Pacto de Nora con algo raro en la voz, un nexo nigromante aparece la primera noche y desaparece al amanecer. Nix y Kai se separan al final del acto.</td>
+        </tr>
+        <tr>
+          <td>Acto 2<br>Levante + Zenera<br>4 Guardianes</td>
+          <td>Nix sale del Piélago Central. En Levante, el Guardián del Templo del Respeto la mira raro: «Eres de aquí, ¿verdad? Aunque no lo sepas.» En Zenera, el Guardián de Las Ruinas revela: «Echonis estuvo aquí. Los nexos de esta zona nunca fueron los mismos.» Kai le pregunta «¿Por qué peleas?» y luego: «Yo tampoco sé.»</td>
+        </tr>
+        <tr>
+          <td>Acto 3<br>Coralia + Nora la Polvosa<br>4 Guardianes</td>
+          <td>En Coralia, el Guardián del Abismo dice: «Hay un nexo en el fondo que lleva décadas esperando.» En Nora la polvosa, la Guardiana de La Hacienda lleva el apellido Vega — no es coincidencia. Nix encuentra a Nora. Kai descubre la verdad de su abuelo por separado. El jugador no ve esa escena. Solo sus consecuencias.</td>
+        </tr>
+        <tr>
+          <td>Acto 4<br>La Cumbre<br>Los Cuatro Pilares + Aldric</td>
+          <td>Aldric no se defiende. Cuenta todo. La batalla más difícil: sus nexos son de los más fuertes — no quieren que él pierda. Su nexo-espada desobedece por primera vez en el turno final para protegerlo. Aldric dice «No.» El nexo baja el escudo.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FINALES -->
+  <h2 id="finales" class="sec">Los Cinco Finales</h2>
+
+  <div class="finale">
+    <div class="fin-id">FIN A</div>
+    <div>
+      <div class="fin-title">La Fractura</div>
+      <p>Nix hace pública la información. Crisis, caos, honestidad por primera vez en 50 años. Kai es defensor legal de derechos de nexos. Aldric da declaraciones.</p>
+    </div>
+  </div>
+
+  <div class="finale">
+    <div class="fin-id">FIN B</div>
+    <div>
+      <div class="fin-title">El Muro</div>
+      <p>Nix guarda los archivos. Le da a Aldric un año para cambiar el sistema desde adentro. Más lento, podría fallar. Aldric duerme bien por primera vez en 50 años.</p>
+    </div>
+  </div>
+
+  <div class="finale">
+    <div class="fin-id">FIN C</div>
+    <div>
+      <div class="fin-title">El Secreto</div>
+      <div class="fin-req">Requiere: arco de Kai completo</div>
+      <p>Kai confronta a su abuelo solo. El jugador lo ve desde una ventana sin audio. Aldric abraza a Kai — primera vez en el juego. Solo dice: «Continuará.» Kai gana. Se convierte en el nuevo Campeón con un power up completo y su mejor equipo posible. Ahora Nix debe enfrentarlo a él como el jefe final secreto de este final — la batalla más difícil del juego.</p>
+    </div>
+  </div>
+
+  <div class="finale">
+    <div class="fin-id">FIN D</div>
+    <div>
+      <div class="fin-title">Nigromante Bueno</div>
+      <div class="fin-req">Requiere: bond alto en Levante</div>
+      <p>Nix revela la verdad a través de la cultura de Levante: los Primordiales son reconocidos como ancestros del mundo nexo. Levante se convierte en el centro espiritual del Piélago. El único final donde nadie llora en el epílogo.</p>
+    </div>
+  </div>
+
+  <div class="finale">
+    <div class="fin-id">FIN E</div>
+    <div>
+      <div class="fin-title">Nigromante Malo</div>
+      <div class="fin-req">Requiere: bond bajo constante</div>
+      <p>Nix expone la verdad y toma el control — no para liberar a los Primordiales sino para dominar los nexos más poderosos. El final más poderoso en términos de juego. El más vacío. El nexo que siguió a Nix desde el Acto 1 no aparece en el epílogo.</p>
+    </div>
+  </div>
+
+  <!-- LO QUE HACE DIFERENTE -->
+  <h2 class="sec">Lo Que Este Juego Hace Diferente</h2>
+
+  <ol class="diff-list">
+    <li>Un villano con razón en algo. Aldric no está equivocado en todo. Eso hace todo más difícil.</li>
+    <li>Nexos con agencia real. Algunos no quieren ser capturados. Hay un pequeño debuff al inicio si fuerzas la captura. No es gran penalización, pero lo notas.</li>
+    <li>Sistema de vínculo como extra. No rompe el balance. Es una capa más, no un requisito para ganar.</li>
+    <li>Rival con arco propio. Kai tiene una historia que no depende de Nix. Su confrontación con Aldric ocurre sin que el jugador la controle.</li>
+    <li>Finales con consecuencias reales. No «todos fueron felices». Cosas mejoraron. Otras costaron algo. Cada final es distinto.</li>
+    <li>Protagonista inteligente. Nix no es un personaje sin pasado. El jugador puede elegir varios de los caminos que podría tomar para su región.</li>
+    <li>El mundo existe sin ti. NPCs cambian entre actos. El barista del Acto 1 piensa diferente en el Acto 4.</li>
+    <li>Los Guardianes cuentan la cultura. No son obstáculos — son la historia de cada región. Los dos Guardianes de Levante representan dos formas de ver la muerte.</li>
+  </ol>
+
+  <div class="divider"></div>
+
+  <blockquote style="font-size:1.15rem; max-width:60ch; margin:0 auto;">
+    «Mi abuela dedicó su vida a demostrar que los nexos podían pensar. El mundo decidió que era más fácil no creerle. Yo no sé si tenía razón. Pero sé que nadie debería ser borrada por hacer una pregunta.»
+    <br><br>
+    <span style="font-family:'Space Mono',monospace;font-size:0.72rem;color:var(--muted);">— Nix, Acto 3</span>
+  </blockquote>
+
+</div>
+
+<!-- ══════════════════════════════════
+     ROAD OF THE HERO — GUIÓN NARRATIVO
+══════════════════════════════════════ -->
+
+<div class="part-header">
+  <span class="part-label">Parte II</span>
+  <h2>Road of the Hero — Guión Narrativo</h2>
+  <p style="color:var(--muted); font-size:0.9rem; margin-top:0.5rem;">Momentos clave en orden cronológico. Referencia para codear en Godot.</p>
+</div>
+
+<div class="container">
+
+  <!-- ═══ ACTO 1 ═══ -->
+  <h2 class="sec" id="roadhero" style="color:var(--gold);">Acto 1 — Piélago Central</h2>
+  <p style="color:var(--muted); font-family:'Space Mono',monospace; font-size:0.75rem; letter-spacing:0.1em; margin-bottom:1.5rem;">SIN GUARDIANES · EL JUEGO PARECE NORMAL</p>
+
+  <!-- Escena 1.1 -->
+  <div class="char-card">
+    <div class="char-header">Escena 1.1 · El Inicio</div>
+    <div class="char-role">Ubicación: Casa de Nix, Piélago Central · Personajes: Nix, Kai</div>
+    <p>Nix despierta en su cuarto. No hay narración dramática, no hay prólogo épico. Kai toca la puerta — van tarde. Hoy reciben su primer nexo del Sabio local. Se conocen desde que eran niños; no hay presentaciones forzadas.</p>
+    <p><strong>Momento clave:</strong> En la sala hay una foto vieja. Si el jugador interactúa, Nix dice: <em>«Mi abuela. No la conocí.»</em> Kai cambia de tema inmediatamente. Es la primera señal.</p>
+    <p><strong>Mecánica:</strong> El jugador elige su primer nexo. Kai elige el opuesto naturalmente — no como rival, sino porque le gusta más.</p>
+  </div>
+
+  <!-- Escena 1.2 -->
+  <div class="char-card">
+    <div class="char-header">Escena 1.2 · Primera Noche</div>
+    <div class="char-role">Ubicación: Ruta entre pueblos, campamento · Personajes: Nix, (nexo misterioso)</div>
+    <p>Primera noche al aire libre. Nix se despierta porque su nexo está inquieto. Afuera del campamento, un nexo que no debería existir en esta zona la observa desde la oscuridad. Ojos que brillan con una luz que no es agresiva — es curiosa.</p>
+    <p>El nexo desaparece al amanecer. Nadie más lo vio. El juego no lo explica.</p>
+    <p><strong>Nota de diseño:</strong> Este nexo seguirá apareciendo en momentos clave. Es un Primordial. El jugador no lo sabe aún.</p>
+  </div>
+
+  <!-- Escena 1.3 -->
+  <div class="char-card">
+    <div class="char-header">Escena 1.3 · El Viejo de la Plaza</div>
+    <div class="char-role">Ubicación: Plaza central del Piélago · Personajes: Nix, NPC veterano</div>
+    <p>Un NPC veterano observa la primera batalla de Nix contra un guía local. Después se acerca. Es amable, tradicional. Parece un maestro retirado.</p>
+    <p><strong>Momento clave:</strong> Al despedirse menciona: <em>«El Pacto de Nora fue lo mejor que le pasó al Piélago.»</em> Lo dice con algo raro en la voz. No elabora. Si el jugador pregunta, dice: <em>«Pregúntale a tu familia.»</em></p>
+    <p>Nix no tiene familia a quien preguntarle. El viejo no lo sabe — o sí lo sabe.</p>
+  </div>
+
+  <!-- Escena 1.4 -->
+  <div class="char-card">
+    <div class="char-header">Escena 1.4 · La Cumbre a lo Lejos</div>
+    <div class="char-role">Ubicación: Mirador del Piélago · Personajes: Nix, Kai</div>
+    <p>Nix y Kai suben a un mirador. Desde ahí se ve La Cumbre — la estructura más alta del archipiélago, donde reside Aldric. Es imponente, lejana. Kai la mira en silencio.</p>
+    <p><strong>Momento clave:</strong> Kai comenta: <em>«Mi abuelo lleva 50 años ahí arriba. Dice que los sellos de los Guardianes son más que metal. Nunca entendí a qué se refería.»</em> Es la primera vez que menciona a Aldric como su abuelo. El juego no hace énfasis. El jugador lo registra o no.</p>
+  </div>
+
+  <!-- Escena 1.5 -->
+  <div class="char-card">
+    <div class="char-header">Escena 1.5 · Salida del Piélago Central</div>
+    <div class="char-role">Ubicación: Puerto del Piélago · Personajes: Nix, Kai</div>
+    <p>Nix y Kai van a separarse por primera vez. Kai va hacia Zenera (tecnología). Nix va hacia Levante (nigromantes). Ambos sin saber por qué eligieron esos destinos.</p>
+    <p><strong>Momento clave:</strong> Kai dice algo que suena a broma pero no lo es: <em>«Ten cuidado en Levante. Dicen que allá los muertos hablan.»</em> Pausa. <em>«O que los vivos escuchan demasiado.»</em></p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══ ACTO 2 ═══ -->
+  <h2 class="sec" style="color:var(--accent2);">Acto 2 — Levante + Zenera</h2>
+  <p style="color:var(--muted); font-family:'Space Mono',monospace; font-size:0.75rem; letter-spacing:0.1em; margin-bottom:1.5rem;">GUARDIANES 1–4 · LAS SEÑALES SE ACUMULAN</p>
+
+  <!-- Escena 2.1 -->
+  <div class="char-card">
+    <div class="char-header">Escena 2.1 · Llegada a Levante</div>
+    <div class="char-role">Ubicación: Entrada a Levante · Personajes: Nix, NPCs locales</div>
+    <p>Levante es diferente. La gente habla distinto. Los altares en las calles no son decoración — son funcionales. Los nexos de esta zona se comportan distinto: más quietos, más observadores. Algunos NPCs miran a Nix con reconocimiento antes de que ella diga su nombre.</p>
+    <p><strong>Worldbuilding:</strong> En Levante, los nexos no se guardan en cápsulas de noche. Duermen junto a sus guías. Hay un NPC que dice: <em>«Aquí no encerramos a los que nos acompañan.»</em> No es un juicio — es costumbre.</p>
+  </div>
+
+  <!-- Escena 2.2 -->
+  <div class="char-card">
+    <div class="char-header">Escena 2.2 · Guardián 1 — El Templo del Respeto</div>
+    <div class="char-role">Ubicación: El Templo del Respeto, Levante · Personajes: Nix, Guardián del Templo</div>
+    <p>El Templo del Respeto es un recinto de ancestros. No hay gradas ni público — solo el Guardián, sus nexos, y altares con ofrendas reales. La batalla se siente como un ritual, no como un deporte.</p>
+    <p><strong>Momento clave — Pre-batalla:</strong> El Guardián mira a Nix. Pausa larga. <em>«Eres de aquí, ¿verdad? Aunque no lo sepas.»</em> Nix no entiende. El Guardián no explica.</p>
+    <p><strong>Momento clave — Post-batalla:</strong> <em>«En Levante decimos que los muertos no se van. Se quedan en lo que dejaron. Tu apellido dejó mucho aquí.»</em> Es la primera vez que alguien conecta a Nix con Levante directamente.</p>
+  </div>
+
+  <!-- Escena 2.3 -->
+  <div class="char-card">
+    <div class="char-header">Escena 2.3 · El Nexo Misterioso — Segunda Aparición</div>
+    <div class="char-role">Ubicación: Ruinas de Levante, de noche · Personajes: Nix, el nexo Primordial</div>
+    <p>Nix explora unas ruinas al borde de Levante. El nexo de la primera noche vuelve a aparecer. Esta vez está más cerca. Hace un gesto que Nix no reconoce pero que su propio nexo sí — su nexo baja la cabeza en respuesta, como si entendiera algo.</p>
+    <p>El Primordial se queda más tiempo antes de irse. Deja una marca en el suelo — un símbolo que Nix fotografía mentalmente pero no puede descifrar.</p>
+    <p><strong>Nota de diseño:</strong> Si el jugador ya tiene bond alto con su nexo, el nexo se acerca al Primordial. Si el bond es bajo, retrocede.</p>
+  </div>
+
+  <!-- Escena 2.4 -->
+  <div class="char-card">
+    <div class="char-header">Escena 2.4 · Guardián 2 — La Cripta del Control</div>
+    <div class="char-role">Ubicación: La Cripta del Control, Levante · Personajes: Nix, Guardiana de la Cripta</div>
+    <p>La Cripta del Control representa la otra cara de Levante: disciplina sobre los muertos y los nexos espectrales. La Guardiana cree que el respeto requiere control, que dejar todo libre es irresponsable.</p>
+    <p><strong>Momento clave:</strong> La Guardiana menciona el Pacto de Nora de forma diferente al Templo del Respeto: <em>«Nora Vega quería que todo fuera libre. Mira lo que pasó. Alguien tenía que poner orden.»</em></p>
+    <p>Dos Guardianes de la misma región. Dos versiones de la misma historia. El jugador empieza a notar que nadie cuenta lo mismo.</p>
+  </div>
+
+  <!-- Escena 2.5 -->
+  <div class="char-card">
+    <div class="char-header">Escena 2.5 · Reencuentro con Kai — Zenera</div>
+    <div class="char-role">Ubicación: Entrada a Zenera · Personajes: Nix, Kai</div>
+    <p>Kai y Nix se reencuentran en la frontera de Zenera. Kai tiene 4 sellos — fue más rápido. Pero algo cambió en él. Su nexo, que siempre fue tranquilo, está inquieto. No duerme bien.</p>
+    <p><strong>Momento clave:</strong> Kai mira a su nexo y dice sin contexto: <em>«Mi nexo lleva semanas sin dormir bien. No sé qué ve cuando me mira.»</em> Nix no sabe qué responder. Es un momento de vulnerabilidad real de Kai — raro en él.</p>
+    <p><strong>Lo que el jugador no sabe:</strong> El nexo de Kai es un eco creado con energía de Echonis. El original murió hace 15 años. El nexo está empezando a recordar algo que no debería recordar.</p>
+  </div>
+
+  <!-- Escena 2.6 -->
+  <div class="char-card">
+    <div class="char-header">Escena 2.6 · Guardián 3 — La Forja</div>
+    <div class="char-role">Ubicación: La Forja, Zenera · Personajes: Nix, Guardián de la Forja</div>
+    <p>Zenera es tecnología alimentada por lava y agua. La Forja está dentro de un volcán activo controlado. El Guardián es pragmático — cree en resultados, no en tradiciones.</p>
+    <p><strong>Momento clave:</strong> Después de la batalla, el Guardián comenta de pasada: <em>«La Liga financia la mitad de esta ciudad. No preguntes de dónde sale el dinero de la otra mitad.»</em> Primera pista de que la Liga tiene conexiones oscuras.</p>
+  </div>
+
+  <!-- Escena 2.7 -->
+  <div class="char-card">
+    <div class="char-header">Escena 2.7 · Guardián 4 — Las Ruinas</div>
+    <div class="char-role">Ubicación: Las Ruinas, Zenera · Personajes: Nix, Guardiana de las Ruinas</div>
+    <p>Las Ruinas de una civilización antigua en Zenera. Los nexos de esta zona actúan diferente — más independientes, menos dóciles. La Guardiana estudia por qué.</p>
+    <p><strong>Momento clave — Revelación:</strong> <em>«Echonis estuvo aquí. Los nexos de esta zona nunca fueron los mismos después de eso. La gente dice que fue hace 50 años. Los nexos de aquí actúan como si fuera ayer.»</em></p>
+    <p>Primera mención directa del Evento Echonis por parte de un Guardián. El jugador ya tiene piezas: el Pacto, Nora Vega, Echonis, nexos que actúan raro. Aún no encajan.</p>
+  </div>
+
+  <!-- Escena 2.8 -->
+  <div class="char-card">
+    <div class="char-header">Escena 2.8 · Kai Pregunta</div>
+    <div class="char-role">Ubicación: Campamento, ruta entre Zenera y Coralia · Personajes: Nix, Kai</div>
+    <p>Noche. Kai y Nix acampan antes de separarse otra vez. Kai para Coralia, Nix para Nora la Polvosa (o al revés).</p>
+    <p><strong>Momento clave — Diálogo:</strong><br>
+    Kai: <em>«¿Por qué peleas, Nix?»</em><br>
+    Nix elige entre varias respuestas (todas sinceras, ninguna completa).<br>
+    Kai, después de escuchar: <em>«Yo tampoco sé.»</em></p>
+    <p>Es el punto medio emocional del juego. Dos personas que no saben por qué hacen lo que hacen. El jugador tampoco debería tener una respuesta clara aún.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══ ACTO 3 ═══ -->
+  <h2 class="sec" style="color:var(--teal);">Acto 3 — Coralia + Nora la Polvosa</h2>
+  <p style="color:var(--muted); font-family:'Space Mono',monospace; font-size:0.75rem; letter-spacing:0.1em; margin-bottom:1.5rem;">GUARDIANES 5–8 · LA VERDAD SE REVELA</p>
+
+  <!-- Escena 3.1 -->
+  <div class="char-card">
+    <div class="char-header">Escena 3.1 · Coralia — El Mar Profundo</div>
+    <div class="char-role">Ubicación: Coralia, zona costera · Personajes: Nix</div>
+    <p>Coralia es silenciosa de una forma que incomoda. Los pescadores miran al mar con respeto que roza el miedo. Los nexos marinos son enormes — más de lo que deberían ser según los registros oficiales de la Liga.</p>
+    <p><strong>Worldbuilding:</strong> En Coralia, los guías no capturan nexos marinos de las profundidades. Es una regla no escrita. Un NPC viejo explica: <em>«Lo que vive abajo no es para nosotros. Nunca lo fue.»</em></p>
+  </div>
+
+  <!-- Escena 3.2 -->
+  <div class="char-card">
+    <div class="char-header">Escena 3.2 · Guardián 5 — El Arrecife</div>
+    <div class="char-role">Ubicación: El Arrecife, Coralia · Personajes: Nix, Guardiana del Arrecife</div>
+    <p>El Arrecife es luminoso, lleno de vida. La Guardiana es protectora — cree que el equilibrio es la clave.</p>
+    <p><strong>Momento clave:</strong> Después de ganar: <em>«Hay cosas en el fondo del mar que la Liga prefiere que no existan. Pero existen. Y llevan décadas esperando.»</em></p>
+    <p>Nix: <em>«¿Esperando qué?»</em><br>
+    Guardiana: <em>«A alguien que haga las preguntas correctas.»</em></p>
+    <p>La misma frase que Nora Vega dirá en el Acto 3. El jugador no lo sabe aún.</p>
+  </div>
+
+  <!-- Escena 3.3 -->
+  <div class="char-card">
+    <div class="char-header">Escena 3.3 · Guardián 6 — El Abismo</div>
+    <div class="char-role">Ubicación: El Abismo, Coralia · Personajes: Nix, Guardián del Abismo</div>
+    <p>El Abismo está bajo el agua. La batalla ocurre en una cámara presurizada con vista al océano profundo. El Guardián es sombrío, filosófico.</p>
+    <p><strong>Momento clave — Revelación mayor:</strong> <em>«Hay un nexo en el fondo que lleva décadas esperando. No es salvaje. No es domesticado. Es... paciente.»</em></p>
+    <p>El Guardián baja la voz: <em>«La última persona que bajó a verlo no volvió a ser la misma. Se llamaba Nora.»</em></p>
+    <p>Primera conexión directa entre la abuela de Nix y los nexos de las profundidades. Nix empieza a entender que su abuela no estaba loca.</p>
+  </div>
+
+  <!-- Escena 3.3b — EL ABISMO PROFUNDO (Expansión narrativa) -->
+  <div class="char-card" style="border: 1px solid var(--teal); background: linear-gradient(180deg, var(--card) 0%, rgba(45,212,191,0.06) 100%);">
+    <div class="char-header" style="color:var(--teal);">Lore Expandido · Lo Que Hay Debajo de Coralia</div>
+    <div class="char-role">Documento de worldbuilding — La Red Primordial del Abismo</div>
+
+    <p>Lo que la Liga no quiere que nadie sepa — y lo que el Guardián del Abismo solo insinúa — es que debajo de Coralia existe algo mucho más grande que un nexo solitario esperando en la oscuridad.</p>
+
+    <p><strong>La Estructura.</strong> A 2,800 metros de profundidad, en la fosa que los pescadores de Coralia llaman «El Ojo», existe una formación que no debería estar ahí. Los mapas batimétricos de la Liga la registraron como «anomalía geológica» hace 40 años y la clasificaron. Cinco kilómetros de ancho. Forma ovalada. Bordes demasiado simétricos para ser naturales. Los sonares que pasan por encima registran interferencia — como si algo devolviera la señal modificada.</p>
+
+    <p>Pescadores viejos de Coralia la conocen. No le tienen nombre oficial. Le dicen <strong>«La Base»</strong>.</p>
+
+    <blockquote>«Mi abuelo bajó con sonar nuevo en el '76. Dijo que la forma de abajo no era roca. Dijo que las paredes respondían. Cuando subió, la Liga le compró el barco y le dijo que no volviera.»</blockquote>
+    <p style="font-size:0.85rem; color:var(--muted);">— Pescador viejo en el puerto de Coralia, diálogo opcional</p>
+
+    <p><strong>Los avistamientos.</strong> Hay una tradición oral en Coralia que la Liga ha intentado borrar durante décadas. Los pescadores la llaman <strong>«Las Luces del Fondo»</strong>:</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr><th>Avistamiento</th><th>Descripción</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Las luces nocturnas</td><td>Desde hace generaciones, los pescadores de Coralia reportan luces azul-verdosas que emergen del fondo en noches sin luna. No son bioluminiscencia — se mueven en formación, suben hasta cierta profundidad, y bajan. Como si algo estuviera patrullando.</td></tr>
+          <tr><td>El Incidente del Sonar</td><td>Hace 30 años, un barco de investigación de la Liga detectó 14 objetos moviéndose a 200 nudos bajo el agua — cuatro veces más rápido que cualquier nexo marino registrado. Los objetos no dejaron estela. La tripulación reportó que sus nexos a bordo se agitaron violentamente y se negaron a obedecer durante 3 horas. El informe fue clasificado. El barco no volvió a salir.</td></tr>
+          <tr><td>Los Emergentes</td><td>Tres veces en los últimos 50 años, nexos desconocidos han emergido del Ojo. No coinciden con ningún registro de la Liga. Son más grandes, más lentos, y miran a los humanos con una calma que perturba. No atacan. No huyen. Observan. Luego vuelven a bajar. Los pocos guías que intentaron vincularlos reportaron que la señal de vínculo fue... <em>devuelta</em>. Como si el nexo estuviera intentando vincular al humano.</td></tr>
+          <tr><td>La Señal de Nora</td><td>Cuando la Dra. Nora Vega visitó Coralia durante su investigación, pidió acceso a los archivos batimétricos clasificados. Le dijeron que no existían. Bajó sola con un submarino prestado. Estuvo 9 horas abajo. Cuando subió, su nexo había aprendido un movimiento que no existe en ningún registro — un Arte que ningún guía le había enseñado. Nora escribió en su diario: <em>«No estamos solos abajo. Y ellos lo saben desde antes que nosotros.»</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Lo que realmente hay abajo.</strong> La Estructura no es geológica. Es una <strong>colonia Primordial</strong>. Docenas de nexos con inteligencia equivalente a la humana viven organizados en la fosa, con algo que podría llamarse cultura — patrones de movimiento que se repiten, señales lumínicas con estructura, divisiones de espacio que sugieren roles.</p>
+
+    <p>No es una base militar. No es agresiva. Es una <strong>civilización paciente</strong>.</p>
+
+    <p>Los Primordiales del Abismo no salieron durante el Evento Echonis. No necesitaban salir. Ya eran lo que Echonis quería crear. Llevan ahí mucho más tiempo que 50 años — posiblemente siglos. El Evento solo los hizo visibles para quienes prestaban atención.</p>
+
+    <blockquote>«Los humanos dicen que descubrieron a los Primordiales hace 50 años. Los Primordiales del fondo dicen que descubrieron a los humanos hace 500.»</blockquote>
+    <p style="font-size:0.85rem; color:var(--muted);">— Nota encontrada en los archivos de Nora Vega</p>
+
+    <p><strong>El encubrimiento de la Liga.</strong> La Liga sabe. Desde el Incidente del Sonar, mantienen una zona de exclusión de 20 kilómetros alrededor del Ojo. Oficialmente es «zona de reproducción de nexos marinos protegidos». Los pescadores saben que es mentira — ningún nexo marino se reproduce a esa profundidad.</p>
+
+    <p>Aldric ordenó la clasificación personalmente. No por maldad — por el mismo motivo que enterró la investigación de Nora: si la gente supiera que existe una civilización entera de nexos inteligentes viviendo debajo de sus barcos, organizada, observándolos... el Pacto no sobreviviría un día.</p>
+
+    <p><strong>Lo que el jugador puede descubrir:</strong> Si Nix habla con los pescadores correctos, encuentra los diarios escondidos de Nora en una cueva costera, y mantiene bond alto con sus nexos, puede desbloquear una escena opcional donde baja al borde del Ojo. No llega a La Estructura — pero ve las luces. Y las luces la ven a ella. Su nexo hace un gesto que Nix nunca le enseñó. El mismo gesto que el Primordial terrestre le hizo en Levante.</p>
+
+    <p>Es el mismo lenguaje. Los de abajo y los de tierra se conocen.</p>
+
+    <p><strong>Implicación para el final:</strong> En el Fin D (Nigromante Bueno), la revelación de los Primordiales incluye la colonia del Abismo. Es el momento más impactante del juego — la cámara baja al fondo del océano y por primera vez el jugador ve La Estructura entera. No es aterradora. Es hermosa. Y lleva ahí desde antes que el Piélago existiera.</p>
+  </div>
+
+  <!-- Escena 3.4 -->
+  <div class="char-card">
+    <div class="char-header">Escena 3.4 · Llegada a Nora la Polvosa</div>
+    <div class="char-role">Ubicación: Desierto de Nora · Personajes: Nix, NPCs del desierto</div>
+    <p>Nora la Polvosa es seca, dura, directa. La gente aquí no usa eufemismos. El honor no es abstracto — es cómo sobrevives. Los nexos del desierto son resistentes, leales, obstinados.</p>
+    <p><strong>Worldbuilding:</strong> Aquí los guías no tienen más de 3 nexos. No por regla — por respeto. Un NPC dice: <em>«Tener más de los que puedes cuidar no es fuerza. Es negligencia.»</em></p>
+    <p><strong>Señal importante:</strong> Algunos apellidos en los letreros de las tiendas son Vega. Nix lo nota. No dice nada.</p>
+  </div>
+
+  <!-- Escena 3.5 -->
+  <div class="char-card">
+    <div class="char-header">Escena 3.5 · Guardián 7 — El Presidio</div>
+    <div class="char-role">Ubicación: El Presidio, Nora la Polvosa · Personajes: Nix, Guardián del Presidio</div>
+    <p>El Presidio es donde el poder se ejerce en Nora. El Guardián controla la zona con carisma y miedo en partes iguales. Sus nexos son fuertes por método, no por vínculo. Pelea sucio — no por trampa, sino porque así se sobrevive aquí.</p>
+    <p><strong>Momento clave:</strong> <em>«¿Vega? Conozco ese apellido. Aquí todos lo conocen. La Doctora era de aquí antes de irse al Piélago a decir cosas que nadie quería escuchar.»</em></p>
+    <p>Primera confirmación de que Nora Vega era de esta región. El Guardián no la admira ni la condena: <em>«Tenía razón en algo. Pero la razón no te protege si nadie quiere escucharla.»</em></p>
+  </div>
+
+  <!-- Escena 3.6 -->
+  <div class="char-card">
+    <div class="char-header">Escena 3.6 · Guardiana 8 — La Hacienda</div>
+    <div class="char-role">Ubicación: La Hacienda, Nora la Polvosa · Personajes: Nix, Guardiana de La Hacienda</div>
+    <p>La Hacienda es el último lugar antes de La Cumbre. La Guardiana lleva el apellido <strong>Vega</strong>. No es coincidencia. Es la sobrina-nieta de Nora. Lleva toda su vida protegiendo el legado de la Doctora desde el anonimato.</p>
+    <p><strong>Momento clave — Antes de la batalla:</strong> <em>«Sé quién eres. Sé por qué estás aquí, aunque tú no lo sepas todavía.»</em></p>
+    <p><strong>Post-batalla — La revelación:</strong> La líder entrega el sello y una carta sellada. <em>«Tu abuela está viva. Ha estado viva estos 50 años. Esta carta tiene las coordenadas. Lo que hagas con ella es decisión tuya.»</em></p>
+    <p>Nix se queda en silencio. No hay música. No hay diálogo de elección. Solo el sonido del viento del desierto. Es el momento más importante del juego antes del Acto 4.</p>
+  </div>
+
+  <!-- Escena 3.7 -->
+  <div class="char-card">
+    <div class="char-header">Escena 3.7 · Nix Encuentra a Nora Vega</div>
+    <div class="char-role">Ubicación: Isla oculta, accesible desde Nora la Polvosa · Personajes: Nix, Dra. Nora Vega, nexos Primordiales</div>
+    <p>Nix sigue las coordenadas. La isla es pequeña, verde en medio del desierto costero. No debería existir — pero existe porque los nexos Primordiales la mantienen viva.</p>
+    <p>Nora Vega tiene 70 años. Está lúcida, fuerte, y no sorprendida de ver a Nix. Lleva 50 años viviendo con nexos Primordiales que <em>eligieron</em> quedarse con ella.</p>
+    <p><strong>El encuentro:</strong> No es emotivo de la forma esperada. Nora no llora. No abraza a Nix inmediatamente. La mira, la evalúa, y dice:</p>
+    <blockquote>«No vine a darte respuestas. Vine a asegurarme de que tenías las preguntas correctas.»</blockquote>
+    <p><strong>La verdad:</strong> Nora explica el Evento Echonis, los Primordiales, y lo que Aldric hizo. No con rencor — con cansancio. <em>«Aldric no es malo. Es un hombre que tomó la decisión más difícil del Piélago y lleva 50 años pagándola.»</em></p>
+    <p><strong>El nexo de Nora:</strong> Tiene memoria de todo el Evento. Cuando ve a Nix, la reconoce de una forma que no puede ser coincidencia. Nix siente algo que no puede explicar.</p>
+  </div>
+
+  <!-- Escena 3.8 -->
+  <div class="char-card">
+    <div class="char-header">Escena 3.8 · Kai Descubre la Verdad (Off-Screen)</div>
+    <div class="char-role">Ubicación: Desconocida · Personajes: Kai (fuera de cámara)</div>
+    <p>Mientras Nix está con Nora, Kai descubre la verdad sobre su abuelo por separado. El jugador <strong>no ve esta escena</strong>. Solo ve las consecuencias: la próxima vez que Nix encuentre a Kai, algo habrá cambiado en él fundamentalmente.</p>
+    <p><strong>Nota de diseño:</strong> Esto es intencional. El arco de Kai no depende de Nix. Kai tiene su propia historia, sus propios descubrimientos, su propia forma de procesar la traición. El jugador solo ve el resultado, como en la vida real.</p>
+  </div>
+
+  <!-- Escena 3.9 -->
+  <div class="char-card">
+    <div class="char-header">Escena 3.9 · El Nexo Primordial — Tercera Aparición</div>
+    <div class="char-role">Ubicación: Camino hacia La Cumbre · Personajes: Nix, el nexo Primordial</div>
+    <p>El nexo que ha seguido a Nix desde el Acto 1 aparece por tercera vez. Ya no se esconde. Se sienta frente a ella y espera.</p>
+    <p>Si el bond del jugador con sus nexos es alto: el Primordial se acerca, hace el mismo gesto que hizo en las ruinas de Levante. Esta vez el nexo de Nix responde con el mismo gesto. Nix entiende — es lenguaje.</p>
+    <p>Si el bond es bajo: el Primordial la mira, baja la cabeza, y se va. No vuelve a aparecer hasta el epílogo (o no aparece, dependiendo del final).</p>
+    <p><strong>Impacto mecánico:</strong> Este momento determina si el Fin D (Nigromante Bueno) está disponible.</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══ ACTO 4 ═══ -->
+  <h2 class="sec" style="color:var(--danger);">Acto 4 — La Cumbre</h2>
+  <p style="color:var(--muted); font-family:'Space Mono',monospace; font-size:0.75rem; letter-spacing:0.1em; margin-bottom:1.5rem;">LOS CUATRO PILARES + ALDRIC · LA DECISIÓN</p>
+
+  <!-- Escena 4.1 -->
+  <div class="char-card">
+    <div class="char-header">Escena 4.1 · Reencuentro con Kai</div>
+    <div class="char-role">Ubicación: Base de La Cumbre · Personajes: Nix, Kai</div>
+    <p>Kai está en la entrada de La Cumbre. Ha cambiado. Ya no bromea. Su nexo está agitado — siente lo que Kai siente.</p>
+    <p><strong>Diálogo:</strong><br>
+    Kai: <em>«Ya sabes, ¿verdad?»</em><br>
+    Nix: <em>«Sí.»</em><br>
+    Kai: <em>«Mi abuelo...»</em> Se detiene. <em>«No importa. Sube. Yo tengo algo que hacer primero.»</em></p>
+    <p>Kai no entra a La Cumbre con Nix. Tiene su propio camino. Dependiendo de las decisiones del jugador durante el juego, Kai puede confrontar a Aldric antes o después que Nix.</p>
+  </div>
+
+  <!-- Escena 4.2 -->
+  <div class="char-card">
+    <div class="char-header">Escena 4.2 · Los Cuatro Pilares</div>
+    <div class="char-role">Ubicación: La Cumbre, pisos 1-4 · Personajes: Nix, Los Cuatro Pilares</div>
+    <p>Los cuatro guías más fuertes del Piélago. Cada uno sabe la verdad — todos eligieron callar por diferentes razones. Las batallas son difíciles mecánicamente, pero cada una tiene un momento de diálogo que revela por qué callaron.</p>
+    <p><strong>Pilar 1:</strong> <em>«Callé porque creí que era temporal. Han pasado 50 años.»</em><br>
+    <strong>Pilar 2:</strong> <em>«Callé porque Aldric me lo pidió. Y le debía la vida.»</em><br>
+    <strong>Pilar 3:</strong> <em>«Callé porque tenía miedo de lo que pasaría si la gente supiera.»</em><br>
+    <strong>Pilar 4:</strong> <em>«Callé porque no sabía si Nora tenía razón. Todavía no lo sé.»</em></p>
+    <p>Cuatro razones humanas. Ninguna es monstruosa. Todas son comprensibles. Eso es lo que hace difícil estar enojado.</p>
+  </div>
+
+  <!-- Escena 4.3 -->
+  <div class="char-card">
+    <div class="char-header">Escena 4.3 · Aldric — La Confesión</div>
+    <div class="char-role">Ubicación: Cima de La Cumbre · Personajes: Nix, Aldric</div>
+    <p>Aldric está de pie, de espaldas. Su nexo-espada flota detrás y a la izquierda, como siempre. No hay música épica. Solo silencio y el sonido del viento en La Cumbre.</p>
+    <p>Aldric se voltea. No se defiende. No justifica. Cuenta todo — el Evento, Nora, los Primordiales, el Pacto, los 50 años de mentira. Lo dice con la voz de alguien que ha ensayado esta conversación mil veces en su cabeza.</p>
+    <blockquote>«Sí, enterré la verdad. Piélago existe porque tomé esa decisión. No espero que me perdones. Espero que entiendas que alguien tenía que decidir, y que nadie más quiso hacerlo.»</blockquote>
+    <p><strong>Lo que sigue:</strong> Aldric no pide clemencia. Pide una batalla. <em>«Si vas a cambiar el Piélago, demuestra que puedes.»</em></p>
+  </div>
+
+  <!-- Escena 4.4 -->
+  <div class="char-card">
+    <div class="char-header">Escena 4.4 · La Batalla Final — Aldric</div>
+    <div class="char-role">Ubicación: Cima de La Cumbre · Personajes: Nix vs. Aldric</div>
+    <p>La batalla más difícil del juego (con posible excepción de Fin C). Aldric pelea en serio — no porque quiera ganar, sino porque necesita saber que quien le suceda es capaz.</p>
+    <p>Sus nexos son de los más fuertes que existen. No quieren que él pierda. Cada nexo pelea con todo porque llevan 50 años a su lado.</p>
+    <p><strong>Momento clave — Turno final:</strong> Cuando Nix está a punto de ganar, el nexo-espada de Aldric hace algo que nunca ha hecho: <strong>desobedece</strong>. Se interpone entre Nix y Aldric. Levanta un escudo que no estaba en su moveset. Protege a su guía por voluntad propia.</p>
+    <p>Aldric lo mira. Dice: <em>«No.»</em></p>
+    <p>El nexo baja el escudo. Aldric pierde.</p>
+    <p><strong>Nota de diseño:</strong> Este es un momento narrativo, no mecánico. El nexo-espada actúa por cuenta propia — es evidencia viva de que los nexos tienen agencia. Es la prueba de todo lo que Nora Vega decía, manifestándose en el nexo del hombre que enterró esa verdad.</p>
+  </div>
+
+  <!-- Escena 4.5 -->
+  <div class="char-card">
+    <div class="char-header">Escena 4.5 · La Decisión</div>
+    <div class="char-role">Ubicación: Cima de La Cumbre · Personajes: Nix, Aldric, (Kai según final)</div>
+    <p>Aldric está derrotado. La información — archivos, pruebas, la verdad sobre los Primordiales — está en manos de Nix. El mundo del Piélago depende de lo que ella haga ahora.</p>
+    <p><strong>El jugador elige.</strong> No hay respuesta correcta. Cada opción tiene peso real:</p>
+
+    <div class="bond-grid">
+      <div class="bond-card lo">
+        <div class="bl" style="color:var(--accent);">Fin A — La Fractura</div>
+        <p>Publicar todo. Crisis, caos, honestidad. El Piélago nunca será el mismo.</p>
+      </div>
+      <div class="bond-card hi">
+        <div class="bl" style="color:var(--teal);">Fin B — El Muro</div>
+        <p>Guardar los archivos. Darle a Aldric un año para cambiar el sistema desde adentro.</p>
+      </div>
+    </div>
+    <div class="bond-grid">
+      <div class="bond-card lo" style="border-top-color:var(--gold);">
+        <div class="bl" style="color:var(--gold);">Fin C — El Secreto</div>
+        <p>Kai confronta a Aldric solo. Nuevo Campeón. Nix lo enfrenta a él. <span style="font-size:0.8rem; color:var(--muted);">(Requiere arco de Kai completo)</span></p>
+      </div>
+      <div class="bond-card hi" style="border-top-color:var(--accent2);">
+        <div class="bl" style="color:var(--accent2);">Fin D — Nigromante Bueno</div>
+        <p>La verdad revelada a través de Levante. Los Primordiales reconocidos como ancestros. <span style="font-size:0.8rem; color:var(--muted);">(Requiere bond alto en Levante)</span></p>
+      </div>
+    </div>
+    <div class="finale" style="border-left:3px solid var(--danger); margin-top:1rem;">
+      <div class="fin-id" style="color:var(--danger);">FIN E</div>
+      <div>
+        <div class="fin-title">Nigromante Malo</div>
+        <div class="fin-req">Requiere: bond bajo constante</div>
+        <p>Nix toma el control. El final más poderoso. El más vacío. El nexo que la siguió desde el Acto 1 no aparece en el epílogo.</p>
+      </div>
+    </div>
+
+    <p style="margin-top:1.5rem; color:var(--muted); font-style:italic;">No hay respuesta correcta. Ese es el punto.</p>
+  </div>
+
+</div>
+
+<footer>
+  <p>NEXOS: FRACTURA · Biblia de Historia v2.1</p>
+  <p style="margin-top:0.4rem;">IndieStudio Brunich · 2026 · 8 Guardianes + La Cumbre · 4 Iniciales · El Abismo · Road of the Hero</p>
+</footer>
+
+</body>
+</html>
