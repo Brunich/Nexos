@@ -1,0 +1,373 @@
+[gd_scene load_steps=10 format=3 uid="uid://ciudad_nora_main"]
+
+[ext_resource type="Script" path="res://codigo/overworld/ciudad_nora_map.gd" id="1_map"]
+[ext_resource type="Script" path="res://codigo/overworld/overworld_controller.gd" id="2_oc"]
+[ext_resource type="Script" path="res://codigo/overworld/warp_zone.gd" id="3_wz"]
+[ext_resource type="Script" path="res://codigo/overworld/npc_controller.gd" id="4_npc"]
+[ext_resource type="Script" path="res://codigo/overworld/service_trigger.gd" id="5_svc"]
+[ext_resource type="Script" path="res://codigo/overworld/dialogue_box.gd" id="6_db"]
+[ext_resource type="Texture2D" path="res://world_building_tiles/buildings objects, floor etc/Objetos Nora.png" id="7_nora"]
+[ext_resource type="Script" path="res://codigo/editor/LevelArchitect.gd" id="9_la"]
+[ext_resource type="Texture2D" path="res://world_building_tiles/buildings objects, floor etc/Hospital Nexo ciudad Nosa la polvosa.png" id="8_hospital"]
+
+[sub_resource type="RectangleShape2D" id="warp_rect"]
+size = Vector2(64, 16)
+
+[sub_resource type="CapsuleShape2D" id="npc_shape"]
+radius = 8.0
+height = 14.0
+
+[sub_resource type="RectangleShape2D" id="interact_rect"]
+size = Vector2(28, 28)
+
+[sub_resource type="RectangleShape2D" id="hospital_collision"]
+size = Vector2(120, 80)
+
+[sub_resource type="RectangleShape2D" id="building_collision_med"]
+size = Vector2(80, 48)
+
+[sub_resource type="RectangleShape2D" id="building_collision_large"]
+size = Vector2(100, 56)
+
+[sub_resource type="RectangleShape2D" id="service_rect"]
+size = Vector2(24, 16)
+
+[sub_resource type="RectangleShape2D" id="boundary_top"]
+size = Vector2(640, 16)
+
+[sub_resource type="RectangleShape2D" id="boundary_bottom"]
+size = Vector2(640, 16)
+
+[sub_resource type="RectangleShape2D" id="boundary_left"]
+size = Vector2(16, 520)
+
+[sub_resource type="RectangleShape2D" id="boundary_right"]
+size = Vector2(16, 520)
+
+; ─────────────────────────────────────────────────────────────────────────────
+; CIUDAD NORA — Ciudad norteña basada en Reynosa
+; Layout: 640x520 píxeles de mundo
+; Tiene: Hospital Nexo, mercado, varias casas, NPCs de la sierra
+; Norte: entrada desde Ruta 1
+; Sur: salida futura a Ruta 2
+; Usa assets de "Objetos Nora" (temática desierto/western mexicano)
+; ─────────────────────────────────────────────────────────────────────────────
+
+[node name="CiudadNora" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_map")
+
+; ── GROUND ────────────────────────────────────────────────────────────────────
+[node name="ground" type="ColorRect" parent="."]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 640.0
+offset_bottom = 520.0
+color = Color(0.82, 0.72, 0.55, 1)
+
+; ── MAIN STREET (eje vertical) ────────────────────────────────────────────────
+[node name="main_street" type="ColorRect" parent="."]
+offset_left = 280.0
+offset_top = 0.0
+offset_right = 360.0
+offset_bottom = 520.0
+color = Color(0.6, 0.5, 0.35, 1)
+
+; ── CROSS STREET (eje horizontal) ─────────────────────────────────────────────
+[node name="cross_street" type="ColorRect" parent="."]
+offset_left = 0.0
+offset_top = 220.0
+offset_right = 640.0
+offset_bottom = 280.0
+color = Color(0.6, 0.5, 0.35, 1)
+
+; ── HOSPITAL NEXO (edificio principal — usa sheet completo del hospital) ──────
+[node name="hospital_nexo" type="Sprite2D" parent="."]
+position = Vector2(160, 120)
+texture = ExtResource("8_hospital")
+region_enabled = true
+region_rect = Rect2(350, 100, 600, 450)
+scale = Vector2(0.2, 0.2)
+
+; ── EDIFICIOS DE NORA (del sheet Objetos Nora) ────────────────────────────────
+; Mercado — zona superior derecha
+[node name="building_market" type="Sprite2D" parent="."]
+position = Vector2(500, 110)
+texture = ExtResource("7_nora")
+region_enabled = true
+region_rect = Rect2(0, 1850, 550, 300)
+scale = Vector2(0.18, 0.18)
+
+; Casa 1 — zona inferior izquierda
+[node name="building_house1" type="Sprite2D" parent="."]
+position = Vector2(100, 350)
+texture = ExtResource("7_nora")
+region_enabled = true
+region_rect = Rect2(600, 800, 300, 250)
+scale = Vector2(0.22, 0.22)
+
+; Casa 2 — zona inferior izquierda baja
+[node name="building_house2" type="Sprite2D" parent="."]
+position = Vector2(100, 450)
+texture = ExtResource("7_nora")
+region_enabled = true
+region_rect = Rect2(900, 800, 300, 250)
+scale = Vector2(0.2, 0.2)
+
+; Club / Centro comunitario — zona inferior derecha
+[node name="building_club" type="Sprite2D" parent="."]
+position = Vector2(500, 350)
+texture = ExtResource("7_nora")
+region_enabled = true
+region_rect = Rect2(600, 1850, 500, 300)
+scale = Vector2(0.2, 0.2)
+
+; Casa 3 — zona inferior derecha baja
+[node name="building_house3" type="Sprite2D" parent="."]
+position = Vector2(500, 450)
+texture = ExtResource("7_nora")
+region_enabled = true
+region_rect = Rect2(1200, 800, 280, 250)
+scale = Vector2(0.2, 0.2)
+
+; ── FLORA: Cactus y palmeras ──────────────────────────────────────────────────
+[node name="cactus1" type="Sprite2D" parent="."]
+position = Vector2(30, 80)
+texture = ExtResource("7_nora")
+region_enabled = true
+region_rect = Rect2(900, 1100, 80, 130)
+scale = Vector2(0.3, 0.3)
+
+[node name="cactus2" type="Sprite2D" parent="."]
+position = Vector2(610, 80)
+texture = ExtResource("7_nora")
+region_enabled = true
+region_rect = Rect2(1000, 1100, 80, 130)
+scale = Vector2(0.3, 0.3)
+
+[node name="palm1" type="Sprite2D" parent="."]
+position = Vector2(30, 480)
+texture = ExtResource("7_nora")
+region_enabled = true
+region_rect = Rect2(1400, 1100, 120, 180)
+scale = Vector2(0.25, 0.25)
+
+[node name="palm2" type="Sprite2D" parent="."]
+position = Vector2(610, 480)
+texture = ExtResource("7_nora")
+region_enabled = true
+region_rect = Rect2(1500, 1100, 120, 180)
+scale = Vector2(0.25, 0.25)
+
+; ── COLLISIONS ────────────────────────────────────────────────────────────────
+[node name="collision_hospital" type="StaticBody2D" parent="."]
+position = Vector2(160, 105)
+
+[node name="shape" type="CollisionShape2D" parent="collision_hospital"]
+shape = SubResource("hospital_collision")
+
+[node name="collision_market" type="StaticBody2D" parent="."]
+position = Vector2(500, 100)
+
+[node name="shape" type="CollisionShape2D" parent="collision_market"]
+shape = SubResource("building_collision_large")
+
+[node name="collision_house1" type="StaticBody2D" parent="."]
+position = Vector2(100, 340)
+
+[node name="shape" type="CollisionShape2D" parent="collision_house1"]
+shape = SubResource("building_collision_med")
+
+[node name="collision_house2" type="StaticBody2D" parent="."]
+position = Vector2(100, 440)
+
+[node name="shape" type="CollisionShape2D" parent="collision_house2"]
+shape = SubResource("building_collision_med")
+
+[node name="collision_club" type="StaticBody2D" parent="."]
+position = Vector2(500, 340)
+
+[node name="shape" type="CollisionShape2D" parent="collision_club"]
+shape = SubResource("building_collision_large")
+
+[node name="collision_house3" type="StaticBody2D" parent="."]
+position = Vector2(500, 440)
+
+[node name="shape" type="CollisionShape2D" parent="collision_house3"]
+shape = SubResource("building_collision_med")
+
+; ── BOUNDARY WALLS ────────────────────────────────────────────────────────────
+[node name="wall_top" type="StaticBody2D" parent="."]
+position = Vector2(320, -8)
+
+[node name="shape" type="CollisionShape2D" parent="wall_top"]
+shape = SubResource("boundary_top")
+
+[node name="wall_bottom" type="StaticBody2D" parent="."]
+position = Vector2(320, 528)
+
+[node name="shape" type="CollisionShape2D" parent="wall_bottom"]
+shape = SubResource("boundary_bottom")
+
+[node name="wall_left" type="StaticBody2D" parent="."]
+position = Vector2(-8, 260)
+
+[node name="shape" type="CollisionShape2D" parent="wall_left"]
+shape = SubResource("boundary_left")
+
+[node name="wall_right" type="StaticBody2D" parent="."]
+position = Vector2(648, 260)
+
+[node name="shape" type="CollisionShape2D" parent="wall_right"]
+shape = SubResource("boundary_right")
+
+; ── OVERWORLD CONTROLLER ──────────────────────────────────────────────────────
+[node name="OverworldController" type="Node" parent="."]
+script = ExtResource("2_oc")
+zone_name = "ciudad_nora"
+zone_music = "overworld_route1"
+
+; ── SPAWN POINTS ──────────────────────────────────────────────────────────────
+[node name="spawn_default" type="Marker2D" parent="."]
+position = Vector2(320, 250)
+
+[node name="spawn_from_ruta1" type="Marker2D" parent="."]
+position = Vector2(320, 30)
+
+[node name="spawn_from_clinic" type="Marker2D" parent="."]
+position = Vector2(160, 170)
+
+; ── WARP: Norte → Ruta 1 ──────────────────────────────────────────────────────
+[node name="warp_to_ruta1" type="Area2D" parent="."]
+position = Vector2(320, 4)
+script = ExtResource("3_wz")
+target_scene = "res://escenas/overworld/ruta_1.tscn"
+target_spawn = "from_ciudad_nora"
+
+[node name="shape" type="CollisionShape2D" parent="warp_to_ruta1"]
+shape = SubResource("warp_rect")
+
+; ── SERVICE: Hospital Nexo (curación) ─────────────────────────────────────────
+[node name="hospital_service" type="Area2D" parent="."]
+position = Vector2(160, 160)
+script = ExtResource("5_svc")
+service_type = "heal"
+
+[node name="shape" type="CollisionShape2D" parent="hospital_service"]
+shape = SubResource("service_rect")
+
+; ── NPCs ──────────────────────────────────────────────────────────────────────
+; Enfermera del Hospital
+[node name="npc_enfermera" type="CharacterBody2D" parent="."]
+position = Vector2(180, 165)
+script = ExtResource("4_npc")
+npc_id = "enfermera_nora"
+dialogue_key = "enfermera_nora_1"
+wander_range = 0.0
+wander_speed = 0.0
+
+[node name="sprite" type="AnimatedSprite2D" parent="npc_enfermera"]
+
+[node name="collision" type="CollisionShape2D" parent="npc_enfermera"]
+shape = SubResource("npc_shape")
+
+[node name="interact_area" type="Area2D" parent="npc_enfermera"]
+
+[node name="collision" type="CollisionShape2D" parent="npc_enfermera/interact_area"]
+shape = SubResource("interact_rect")
+
+; Comerciante del mercado
+[node name="npc_comerciante" type="CharacterBody2D" parent="."]
+position = Vector2(480, 150)
+script = ExtResource("4_npc")
+npc_id = "comerciante_nora"
+dialogue_key = "comerciante_nora_1"
+wander_range = 10.0
+wander_speed = 15.0
+
+[node name="sprite" type="AnimatedSprite2D" parent="npc_comerciante"]
+
+[node name="collision" type="CollisionShape2D" parent="npc_comerciante"]
+shape = SubResource("npc_shape")
+
+[node name="interact_area" type="Area2D" parent="npc_comerciante"]
+
+[node name="collision" type="CollisionShape2D" parent="npc_comerciante/interact_area"]
+shape = SubResource("interact_rect")
+
+; Viejo de la sierra — menciona a Xochi por primera vez
+[node name="npc_viejo_sierra" type="CharacterBody2D" parent="."]
+position = Vector2(200, 300)
+script = ExtResource("4_npc")
+npc_id = "viejo_sierra"
+dialogue_key = "viejo_sierra_xochi"
+wander_range = 20.0
+wander_speed = 12.0
+
+[node name="sprite" type="AnimatedSprite2D" parent="npc_viejo_sierra"]
+
+[node name="collision" type="CollisionShape2D" parent="npc_viejo_sierra"]
+shape = SubResource("npc_shape")
+
+[node name="interact_area" type="Area2D" parent="npc_viejo_sierra"]
+
+[node name="collision" type="CollisionShape2D" parent="npc_viejo_sierra/interact_area"]
+shape = SubResource("interact_rect")
+
+; Chica local — info sobre la ciudad
+[node name="npc_chica_local" type="CharacterBody2D" parent="."]
+position = Vector2(420, 300)
+script = ExtResource("4_npc")
+npc_id = "chica_nora"
+dialogue_key = "chica_nora_1"
+wander_range = 30.0
+wander_speed = 18.0
+
+[node name="sprite" type="AnimatedSprite2D" parent="npc_chica_local"]
+
+[node name="collision" type="CollisionShape2D" parent="npc_chica_local"]
+shape = SubResource("npc_shape")
+
+[node name="interact_area" type="Area2D" parent="npc_chica_local"]
+
+[node name="collision" type="CollisionShape2D" parent="npc_chica_local/interact_area"]
+shape = SubResource("interact_rect")
+
+; Niño corriendo — tip sobre Nexos salvajes
+[node name="npc_nino_nexos" type="CharacterBody2D" parent="."]
+position = Vector2(300, 400)
+script = ExtResource("4_npc")
+npc_id = "nino_nexos_nora"
+dialogue_key = "nino_nexos_tip"
+wander_range = 50.0
+wander_speed = 30.0
+
+[node name="sprite" type="AnimatedSprite2D" parent="npc_nino_nexos"]
+
+[node name="collision" type="CollisionShape2D" parent="npc_nino_nexos"]
+shape = SubResource("npc_shape")
+
+[node name="interact_area" type="Area2D" parent="npc_nino_nexos"]
+
+[node name="collision" type="CollisionShape2D" parent="npc_nino_nexos/interact_area"]
+shape = SubResource("interact_rect")
+
+; ── DIALOGUE BOX ──────────────────────────────────────────────────────────────
+[node name="DialogueBox" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="dialogue" type="Control" parent="DialogueBox"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("6_db")
+
+; ── LEVEL ARCHITECT ───────────────────────────────────────────────────────────
+[node name="LevelArchitect" type="Node2D" parent="."]
+script = ExtResource("9_la")
+use_external_folder = false
+res_tile_folder = "res://world_building_tiles"
+snap_to_grid = true
+snap_grid_px = 16
+collision_bottom_ratio = 0.2
+require_shift_for_brush = true

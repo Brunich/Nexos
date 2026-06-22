@@ -1,0 +1,236 @@
+[gd_scene load_steps=8 format=3 uid="uid://ruta_1_nexos"]
+
+[ext_resource type="Script" path="res://codigo/overworld/ruta_1_map.gd" id="1_map"]
+[ext_resource type="Script" path="res://codigo/overworld/overworld_controller.gd" id="2_oc"]
+[ext_resource type="Script" path="res://codigo/overworld/warp_zone.gd" id="3_wz"]
+[ext_resource type="Script" path="res://codigo/overworld/tall_grass.gd" id="4_tg"]
+[ext_resource type="Script" path="res://codigo/overworld/npc_controller.gd" id="5_npc"]
+[ext_resource type="Script" path="res://codigo/editor/LevelArchitect.gd" id="7_la"]
+[ext_resource type="Texture2D" path="res://world_building_tiles/buildings objects, floor etc/Objetos Nora.png" id="6_nora"]
+
+[sub_resource type="RectangleShape2D" id="warp_rect"]
+size = Vector2(64, 16)
+
+[sub_resource type="RectangleShape2D" id="grass_rect1"]
+size = Vector2(80, 64)
+
+[sub_resource type="RectangleShape2D" id="grass_rect2"]
+size = Vector2(96, 48)
+
+[sub_resource type="RectangleShape2D" id="grass_rect3"]
+size = Vector2(72, 56)
+
+[sub_resource type="CapsuleShape2D" id="npc_shape"]
+radius = 8.0
+height = 14.0
+
+[sub_resource type="RectangleShape2D" id="interact_rect"]
+size = Vector2(28, 28)
+
+[sub_resource type="RectangleShape2D" id="boundary_left"]
+size = Vector2(16, 800)
+
+[sub_resource type="RectangleShape2D" id="boundary_right"]
+size = Vector2(16, 800)
+
+; ─────────────────────────────────────────────────────────────────────────────
+; RUTA 1 — Camino entre Villa Nexo (norte) y Ciudad Nora (sur)
+; Layout: 320x800 píxeles, ruta vertical
+; Tiene: hierba alta para encuentros, árboles decorativos, 1 NPC guía
+; ─────────────────────────────────────────────────────────────────────────────
+
+[node name="Ruta1" type="Node2D"]
+y_sort_enabled = true
+script = ExtResource("1_map")
+
+; ── GROUND ────────────────────────────────────────────────────────────────────
+[node name="ground" type="ColorRect" parent="."]
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 320.0
+offset_bottom = 800.0
+color = Color(0.45, 0.6, 0.32, 1)
+
+; ── DIRT PATH (centro) ────────────────────────────────────────────────────────
+[node name="path" type="ColorRect" parent="."]
+offset_left = 120.0
+offset_top = 0.0
+offset_right = 200.0
+offset_bottom = 800.0
+color = Color(0.72, 0.62, 0.42, 1)
+
+; ── DECORACIONES: Árboles y rocas del sheet Nora ──────────────────────────────
+; Árbol izquierda superior
+[node name="tree_l1" type="Sprite2D" parent="."]
+position = Vector2(40, 100)
+texture = ExtResource("6_nora")
+region_enabled = true
+region_rect = Rect2(1200, 1100, 120, 160)
+scale = Vector2(0.25, 0.25)
+
+; Árbol derecha superior
+[node name="tree_r1" type="Sprite2D" parent="."]
+position = Vector2(280, 150)
+texture = ExtResource("6_nora")
+region_enabled = true
+region_rect = Rect2(1350, 1100, 120, 160)
+scale = Vector2(0.25, 0.25)
+
+; Cactus izquierda medio
+[node name="cactus1" type="Sprite2D" parent="."]
+position = Vector2(50, 400)
+texture = ExtResource("6_nora")
+region_enabled = true
+region_rect = Rect2(900, 1100, 80, 120)
+scale = Vector2(0.3, 0.3)
+
+; Cactus derecha medio
+[node name="cactus2" type="Sprite2D" parent="."]
+position = Vector2(270, 500)
+texture = ExtResource("6_nora")
+region_enabled = true
+region_rect = Rect2(1000, 1100, 80, 120)
+scale = Vector2(0.3, 0.3)
+
+; Rocas abajo
+[node name="rocks1" type="Sprite2D" parent="."]
+position = Vector2(60, 650)
+texture = ExtResource("6_nora")
+region_enabled = true
+region_rect = Rect2(600, 800, 100, 60)
+scale = Vector2(0.3, 0.3)
+
+; ── TALL GRASS (encuentros salvajes) ──────────────────────────────────────────
+[node name="grass_patch_1" type="Area2D" parent="."]
+position = Vector2(60, 200)
+script = ExtResource("4_tg")
+
+[node name="shape" type="CollisionShape2D" parent="grass_patch_1"]
+shape = SubResource("grass_rect1")
+
+[node name="visual" type="ColorRect" parent="grass_patch_1"]
+offset_left = -40.0
+offset_top = -32.0
+offset_right = 40.0
+offset_bottom = 32.0
+color = Color(0.3, 0.55, 0.2, 0.7)
+
+[node name="grass_patch_2" type="Area2D" parent="."]
+position = Vector2(240, 350)
+script = ExtResource("4_tg")
+
+[node name="shape" type="CollisionShape2D" parent="grass_patch_2"]
+shape = SubResource("grass_rect2")
+
+[node name="visual" type="ColorRect" parent="grass_patch_2"]
+offset_left = -48.0
+offset_top = -24.0
+offset_right = 48.0
+offset_bottom = 24.0
+color = Color(0.3, 0.55, 0.2, 0.7)
+
+[node name="grass_patch_3" type="Area2D" parent="."]
+position = Vector2(80, 550)
+script = ExtResource("4_tg")
+
+[node name="shape" type="CollisionShape2D" parent="grass_patch_3"]
+shape = SubResource("grass_rect3")
+
+[node name="visual" type="ColorRect" parent="grass_patch_3"]
+offset_left = -36.0
+offset_top = -28.0
+offset_right = 36.0
+offset_bottom = 28.0
+color = Color(0.3, 0.55, 0.2, 0.7)
+
+[node name="grass_patch_4" type="Area2D" parent="."]
+position = Vector2(250, 650)
+script = ExtResource("4_tg")
+
+[node name="shape" type="CollisionShape2D" parent="grass_patch_4"]
+shape = SubResource("grass_rect1")
+
+[node name="visual" type="ColorRect" parent="grass_patch_4"]
+offset_left = -40.0
+offset_top = -32.0
+offset_right = 40.0
+offset_bottom = 32.0
+color = Color(0.3, 0.55, 0.2, 0.7)
+
+; ── BOUNDARY WALLS ────────────────────────────────────────────────────────────
+[node name="wall_left" type="StaticBody2D" parent="."]
+position = Vector2(-8, 400)
+
+[node name="shape" type="CollisionShape2D" parent="wall_left"]
+shape = SubResource("boundary_left")
+
+[node name="wall_right" type="StaticBody2D" parent="."]
+position = Vector2(328, 400)
+
+[node name="shape" type="CollisionShape2D" parent="wall_right"]
+shape = SubResource("boundary_right")
+
+; ── OVERWORLD CONTROLLER ──────────────────────────────────────────────────────
+[node name="OverworldController" type="Node" parent="."]
+script = ExtResource("2_oc")
+zone_name = "ruta_1"
+zone_music = "overworld_route1"
+
+; ── SPAWN POINTS ──────────────────────────────────────────────────────────────
+[node name="spawn_default" type="Marker2D" parent="."]
+position = Vector2(160, 60)
+
+[node name="spawn_from_villa_nexo" type="Marker2D" parent="."]
+position = Vector2(160, 30)
+
+[node name="spawn_from_ciudad_nora" type="Marker2D" parent="."]
+position = Vector2(160, 770)
+
+; ── WARP: Norte → Villa Nexo ──────────────────────────────────────────────────
+[node name="warp_to_villa_nexo" type="Area2D" parent="."]
+position = Vector2(160, 4)
+script = ExtResource("3_wz")
+target_scene = "res://escenas/overworld/villa_nexo.tscn"
+target_spawn = "from_ruta1"
+
+[node name="shape" type="CollisionShape2D" parent="warp_to_villa_nexo"]
+shape = SubResource("warp_rect")
+
+; ── WARP: Sur → Ciudad Nora ───────────────────────────────────────────────────
+[node name="warp_to_ciudad_nora" type="Area2D" parent="."]
+position = Vector2(160, 796)
+script = ExtResource("3_wz")
+target_scene = "res://escenas/overworld/ciudad_nora.tscn"
+target_spawn = "from_ruta1"
+
+[node name="shape" type="CollisionShape2D" parent="warp_to_ciudad_nora"]
+shape = SubResource("warp_rect")
+
+; ── NPC Guía en el camino ─────────────────────────────────────────────────────
+[node name="npc_guia_ruta" type="CharacterBody2D" parent="."]
+position = Vector2(180, 450)
+script = ExtResource("5_npc")
+npc_id = "guia_ruta1"
+dialogue_key = "guia_ruta1_intro"
+wander_range = 0.0
+wander_speed = 0.0
+
+[node name="sprite" type="AnimatedSprite2D" parent="npc_guia_ruta"]
+
+[node name="collision" type="CollisionShape2D" parent="npc_guia_ruta"]
+shape = SubResource("npc_shape")
+
+[node name="interact_area" type="Area2D" parent="npc_guia_ruta"]
+
+[node name="collision" type="CollisionShape2D" parent="npc_guia_ruta/interact_area"]
+shape = SubResource("interact_rect")
+
+; ── LEVEL ARCHITECT ───────────────────────────────────────────────────────────
+[node name="LevelArchitect" type="Node2D" parent="."]
+script = ExtResource("7_la")
+use_external_folder = false
+res_tile_folder = "res://world_building_tiles"
+snap_to_grid = true
+snap_grid_px = 16
+collision_bottom_ratio = 0.2
+require_shift_for_brush = true
