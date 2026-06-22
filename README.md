@@ -4,6 +4,8 @@ Fan RPG built in **Godot 4.6** (GDScript). Top-down overworld, turn-based battle
 
 Not affiliated with Nintendo or The Pokémon Company.
 
+**How it works:** see [docs/HOW_IT_WORKS.md](docs/HOW_IT_WORKS.md) for boot flow, battle phases, saves, and file map.
+
 ## Run
 
 1. Install [Godot 4.6](https://godotengine.org/) (GL Compatibility).
