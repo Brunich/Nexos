@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://starter_select_nexus"]
+
+[ext_resource type="Script" path="res://codigo/ui/starter_select.gd" id="1"]
+
+[node name="StarterSelect" type="CanvasLayer"]
+script = ExtResource("1")
+layer = 10
