@@ -1,0 +1,6 @@
+SCRIPT ERROR: Parse Error: Cannot infer the type of "encounter_id" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://qa/route_encounter_probe.gd:25)
+SCRIPT ERROR: Parse Error: The variable type is being inferred from a Variant value, so it will be typed as Variant. (Warning treated as error.)
+   at: GDScript::reload (res://qa/route_encounter_probe.gd:37)
+ERROR: Failed to load script "res://qa/route_encounter_probe.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:3041)

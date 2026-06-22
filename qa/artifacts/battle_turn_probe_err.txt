@@ -1,0 +1,18 @@
+SCRIPT ERROR: Parse Error: Cannot infer the type of "prog" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://codigo/batalla/battle_scene.gd:66)
+ERROR: Failed to load script "res://codigo/batalla/battle_scene.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:3041)
+SCRIPT ERROR: Parse Error: Cannot infer the type of "idx" variable because the value doesn't have a set type.
+   at: GDScript::reload (res://codigo/batalla/battle_manager.gd:262)
+SCRIPT ERROR: Parse Error: The variable type is being inferred from a Variant value, so it will be typed as Variant. (Warning treated as error.)
+   at: GDScript::reload (res://codigo/batalla/battle_manager.gd:270)
+SCRIPT ERROR: Parse Error: The variable type is being inferred from a Variant value, so it will be typed as Variant. (Warning treated as error.)
+   at: GDScript::reload (res://codigo/batalla/battle_manager.gd:334)
+ERROR: Failed to load script "res://codigo/batalla/battle_manager.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:3041)
+SCRIPT ERROR: Parse Error: Too many arguments for "setup_new_adventure()" call. Expected at most 1 but received 2.
+   at: GDScript::reload (res://qa/battle_turn_probe.gd:16)
+SCRIPT ERROR: Parse Error: Static function "growl()" not found in base "MoveData".
+   at: GDScript::reload (res://qa/battle_turn_probe.gd:19)
+ERROR: Failed to load script "res://qa/battle_turn_probe.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:3041)

@@ -1,0 +1,4 @@
+SCRIPT ERROR: Parse Error: The variable type is being inferred from a Variant value, so it will be typed as Variant. (Warning treated as error.)
+   at: GDScript::reload (res://qa/encounter_zone_audit_probe.gd:51)
+ERROR: Failed to load script "res://qa/encounter_zone_audit_probe.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:3041)

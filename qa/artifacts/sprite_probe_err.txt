@@ -1,0 +1,4 @@
+SCRIPT ERROR: Parse Error: Static function "load_nexo_sprite_by_id()" not found in base "RuntimeTextureLoader".
+   at: GDScript::reload (res://qa/sprite_resolution_probe.gd:15)
+ERROR: Failed to load script "res://qa/sprite_resolution_probe.gd" with error "Parse error".
+   at: load (modules/gdscript/gdscript.cpp:3041)
