@@ -1,0 +1,24 @@
+# Godot
+.godot/
+*.tmp
+*.translation
+
+# Editor / local
+.cursor/
+*.swp
+*~
+
+# Logs and backups
+godot_*.log
+NEXUS_save_backup*/
+
+# Large local tile cache (regenerate in editor; see docs/assets.md)
+world_building_tiles/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Scratch
+node_2d.tscn
