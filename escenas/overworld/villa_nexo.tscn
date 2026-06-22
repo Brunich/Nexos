@@ -1,0 +1,236 @@
+[gd_scene format=3 uid="uid://vmo1p20jrkit"]
+
+[ext_resource type="Script" uid="uid://c5akjydlttr6y" path="res://codigo/overworld/villa_nexo_map.gd" id="1_map"]
+[ext_resource type="Script" uid="uid://dt3igf6kvvvmo" path="res://codigo/overworld/overworld_controller.gd" id="2_oc"]
+[ext_resource type="Script" uid="uid://kn5e1fraoaan" path="res://codigo/overworld/warp_zone.gd" id="3_wz"]
+[ext_resource type="Script" uid="uid://cydc6tbpxhgbp" path="res://codigo/overworld/npc_controller.gd" id="4_npc"]
+[ext_resource type="Texture2D" uid="uid://dakfpdmtggo0p" path="res://world_building_tiles/buildings objects, floor etc/Objetos villa brasa.png" id="5_tileset"]
+[ext_resource type="Texture2D" uid="uid://ki5g4gknx1n" path="res://world_building_tiles/buildings objects, floor etc/Objetos villabrasa2.png" id="6_tileset2"]
+[ext_resource type="Script" uid="uid://caeyu844isdb8" path="res://codigo/overworld/dialogue_box.gd" id="7_db"]
+[ext_resource type="Script" uid="uid://cdfjvv5y36ivp" path="res://codigo/editor/LevelArchitect.gd" id="8_la"]
+
+[sub_resource type="RectangleShape2D" id="building_collision_nana"]
+size = Vector2(80, 48)
+
+[sub_resource type="RectangleShape2D" id="building_collision_small"]
+size = Vector2(64, 40)
+
+[sub_resource type="RectangleShape2D" id="boundary_top"]
+size = Vector2(480, 16)
+
+[sub_resource type="RectangleShape2D" id="boundary_left"]
+size = Vector2(16, 400)
+
+[sub_resource type="RectangleShape2D" id="boundary_right"]
+size = Vector2(16, 400)
+
+[sub_resource type="RectangleShape2D" id="warp_south"]
+size = Vector2(64, 16)
+
+[sub_resource type="CapsuleShape2D" id="npc_shape"]
+radius = 7.0
+height = 14.0
+
+[sub_resource type="RectangleShape2D" id="interact_rect"]
+size = Vector2(28, 28)
+
+[node name="VillaNexo" type="Node2D" unique_id=389143709]
+y_sort_enabled = true
+script = ExtResource("1_map")
+
+[node name="ground" type="ColorRect" parent="." unique_id=465675142]
+offset_right = 480.0
+offset_bottom = 400.0
+color = Color(0.76, 0.68, 0.52, 1)
+
+[node name="path_center" type="ColorRect" parent="." unique_id=2126798259]
+offset_left = 200.0
+offset_right = 280.0
+offset_bottom = 400.0
+color = Color(0.65, 0.55, 0.38, 1)
+
+[node name="building_nana" type="Sprite2D" parent="." unique_id=318268745]
+position = Vector2(100, 100)
+scale = Vector2(0.22, 0.22)
+texture = ExtResource("5_tileset")
+region_enabled = true
+region_rect = Rect2(800, 500, 400, 300)
+
+[node name="building_house1" type="Sprite2D" parent="." unique_id=1866559543]
+position = Vector2(360, 100)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("5_tileset")
+region_enabled = true
+region_rect = Rect2(800, 500, 350, 280)
+
+[node name="building_house2" type="Sprite2D" parent="." unique_id=1733260791]
+position = Vector2(90, 240)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("5_tileset")
+region_enabled = true
+region_rect = Rect2(1200, 500, 300, 250)
+
+[node name="building_shop" type="Sprite2D" parent="." unique_id=1179686518]
+position = Vector2(370, 240)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("6_tileset2")
+region_enabled = true
+region_rect = Rect2(800, 400, 380, 280)
+
+[node name="tree1" type="Sprite2D" parent="." unique_id=443111296]
+position = Vector2(30, 60)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("5_tileset")
+region_enabled = true
+region_rect = Rect2(1400, 900, 150, 200)
+
+[node name="tree2" type="Sprite2D" parent="." unique_id=288684215]
+position = Vector2(450, 60)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("5_tileset")
+region_enabled = true
+region_rect = Rect2(1400, 900, 150, 200)
+
+[node name="tree3" type="Sprite2D" parent="." unique_id=2145126958]
+position = Vector2(30, 300)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("5_tileset")
+region_enabled = true
+region_rect = Rect2(1550, 900, 150, 200)
+
+[node name="tree4" type="Sprite2D" parent="." unique_id=520564196]
+position = Vector2(450, 300)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("5_tileset")
+region_enabled = true
+region_rect = Rect2(1550, 900, 150, 200)
+
+[node name="collision_nana" type="StaticBody2D" parent="." unique_id=844482404]
+position = Vector2(100, 90)
+
+[node name="shape" type="CollisionShape2D" parent="collision_nana" unique_id=1022490404]
+shape = SubResource("building_collision_nana")
+
+[node name="collision_house1" type="StaticBody2D" parent="." unique_id=183035891]
+position = Vector2(360, 90)
+
+[node name="shape" type="CollisionShape2D" parent="collision_house1" unique_id=1843265454]
+shape = SubResource("building_collision_small")
+
+[node name="collision_house2" type="StaticBody2D" parent="." unique_id=845482454]
+position = Vector2(90, 230)
+
+[node name="shape" type="CollisionShape2D" parent="collision_house2" unique_id=1093618405]
+shape = SubResource("building_collision_small")
+
+[node name="collision_shop" type="StaticBody2D" parent="." unique_id=1224796828]
+position = Vector2(370, 230)
+
+[node name="shape" type="CollisionShape2D" parent="collision_shop" unique_id=1032767135]
+shape = SubResource("building_collision_small")
+
+[node name="wall_top" type="StaticBody2D" parent="." unique_id=143046341]
+position = Vector2(240, -8)
+
+[node name="shape" type="CollisionShape2D" parent="wall_top" unique_id=1679439778]
+shape = SubResource("boundary_top")
+
+[node name="wall_left" type="StaticBody2D" parent="." unique_id=457641889]
+position = Vector2(-8, 200)
+
+[node name="shape" type="CollisionShape2D" parent="wall_left" unique_id=1351033321]
+shape = SubResource("boundary_left")
+
+[node name="wall_right" type="StaticBody2D" parent="." unique_id=738725039]
+position = Vector2(488, 200)
+
+[node name="shape" type="CollisionShape2D" parent="wall_right" unique_id=1489225321]
+shape = SubResource("boundary_right")
+
+[node name="OverworldController" type="Node" parent="." unique_id=2141789219]
+script = ExtResource("2_oc")
+zone_music = "overworld_cinder"
+
+[node name="spawn_default" type="Marker2D" parent="." unique_id=1232418203]
+position = Vector2(240, 300)
+
+[node name="spawn_from_ruta1" type="Marker2D" parent="." unique_id=615831941]
+position = Vector2(240, 370)
+
+[node name="spawn_from_nana_house" type="Marker2D" parent="." unique_id=1889956604]
+position = Vector2(100, 140)
+
+[node name="warp_to_ruta1" type="Area2D" parent="." unique_id=1294691026]
+position = Vector2(240, 396)
+script = ExtResource("3_wz")
+target_scene = "res://escenas/overworld/ruta_1.tscn"
+target_spawn = "from_villa_nexo"
+
+[node name="shape" type="CollisionShape2D" parent="warp_to_ruta1" unique_id=1006650918]
+shape = SubResource("warp_south")
+
+[node name="npc_nana_remi" type="CharacterBody2D" parent="." unique_id=543927850]
+position = Vector2(120, 150)
+script = ExtResource("4_npc")
+npc_id = "nana_remi"
+wander_speed = 0.0
+
+[node name="sprite" type="AnimatedSprite2D" parent="npc_nana_remi" unique_id=944859694]
+
+[node name="collision" type="CollisionShape2D" parent="npc_nana_remi" unique_id=2045875583]
+shape = SubResource("npc_shape")
+
+[node name="interact_area" type="Area2D" parent="npc_nana_remi" unique_id=308537607]
+
+[node name="collision" type="CollisionShape2D" parent="npc_nana_remi/interact_area" unique_id=1509605253]
+shape = SubResource("interact_rect")
+
+[node name="npc_vecino" type="CharacterBody2D" parent="." unique_id=1179212692]
+position = Vector2(300, 200)
+script = ExtResource("4_npc")
+npc_id = "vecino_villa"
+wander_range = 40.0
+dialogue_key = "vecino_villa_1"
+
+[node name="sprite" type="AnimatedSprite2D" parent="npc_vecino" unique_id=430176528]
+
+[node name="collision" type="CollisionShape2D" parent="npc_vecino" unique_id=1344684109]
+shape = SubResource("npc_shape")
+
+[node name="interact_area" type="Area2D" parent="npc_vecino" unique_id=1142918296]
+
+[node name="collision" type="CollisionShape2D" parent="npc_vecino/interact_area" unique_id=1657034656]
+shape = SubResource("interact_rect")
+
+[node name="npc_nino" type="CharacterBody2D" parent="." unique_id=570053175]
+position = Vector2(340, 310)
+script = ExtResource("4_npc")
+npc_id = "nino_villa"
+wander_range = 20.0
+wander_speed = 25.0
+dialogue_key = "nino_villa_1"
+
+[node name="sprite" type="AnimatedSprite2D" parent="npc_nino" unique_id=1754617706]
+
+[node name="collision" type="CollisionShape2D" parent="npc_nino" unique_id=461625533]
+shape = SubResource("npc_shape")
+
+[node name="interact_area" type="Area2D" parent="npc_nino" unique_id=1747634947]
+
+[node name="collision" type="CollisionShape2D" parent="npc_nino/interact_area" unique_id=745515292]
+shape = SubResource("interact_rect")
+
+[node name="DialogueBox" type="CanvasLayer" parent="." unique_id=1783966949]
+layer = 10
+
+[node name="dialogue" type="Control" parent="DialogueBox" unique_id=2039738103]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("7_db")
+
+[node name="LevelArchitect" type="Node2D" parent="." unique_id=675699575]
+y_sort_enabled = true
+script = ExtResource("8_la")
+normalize_to_px = null
