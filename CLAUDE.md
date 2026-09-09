@@ -34,6 +34,16 @@ La UI de "Atrapar" en batalla debe decir "Ofrecer Vínculo".
 
 No dupliques trabajo de narrativa/diálogos — esos los está escribiendo Cowork.
 
+## ✍️ Commits y PRs: se escriben para quien los lee de fuera
+
+Nunca citar el prompt textual de Bruno, nunca narrar el proceso paso a paso,
+nunca firmar con el nombre de ninguna herramienta de IA (Claude, Cowork,
+Codex, Cursor, Gemini, ChatGPT...) — ni como trailer (`Co-Authored-By`,
+`Made-with`), ni nombrada en el título o el cuerpo, ni con un link a un
+artefacto (`claude.ai/...`). El cuerpo dice en pocas líneas el objetivo, qué
+ficheros se tocaron, y cómo se ve o se siente el cambio en marcha. Vale para
+toda IA que trabaje en este repo.
+
 ---
 
 ## ¿Qué es este proyecto?
