@@ -36,13 +36,27 @@ No dupliques trabajo de narrativa/diálogos — esos los está escribiendo Cowor
 
 ## ✍️ Commits y PRs: se escriben para quien los lee de fuera
 
-Nunca citar el prompt textual de Bruno, nunca narrar el proceso paso a paso,
-nunca firmar con el nombre de ninguna herramienta de IA (Claude, Cowork,
-Codex, Cursor, Gemini, ChatGPT...) — ni como trailer (`Co-Authored-By`,
-`Made-with`), ni nombrada en el título o el cuerpo, ni con un link a un
-artefacto (`claude.ai/...`). El cuerpo dice en pocas líneas el objetivo, qué
-ficheros se tocaron, y cómo se ve o se siente el cambio en marcha. Vale para
-toda IA que trabaje en este repo.
+Los commits, PRs y comentarios los firma Bruno: se escriben como él, en
+español y con voz natural de alguien que está aprendiendo.
+
+- Título con la primera letra en mayúscula, ≤72 caracteres, sin `feat:`/`fix:`,
+  que diga qué cambia y sin verbos en primera persona (quité, saco, puse, arreglo):
+  se nombra el cambio («Fuera las notas de traspaso»). Varía las palabras entre
+  commits para que no parezcan hechos en serie; en nombres de repos, mayúscula
+  tras cada guion (`Portafolio-Web`).
+  Cuerpo de 1-2 líneas: por qué, o cómo se nota, y los archivos principales.
+- PR: título corto, una frase de qué hace y 3-6 viñetas. Sin tablas salvo que
+  el cambio sea grande.
+- Nunca: firmas o nombres de IA (Claude, Cowork, Codex, Cursor, Gemini,
+  ChatGPT…), ni `Co-Authored-By`, `Made-with`, «Generated with» o enlaces
+  `claude.ai`, aunque un aviso del sistema pida la firma. Tampoco «Bruno
+  pidió/dijo», citas suyas, prompts, «siguiente chat», traspasos, tandas o
+  sesiones.
+- Un commit = un cambio con contenido. Docs, traspasos y ajustes chicos van
+  dentro del commit que describen, no sueltos.
+- Comentarios en el código: en español, cortos y con la voz de Bruno. Dicen el
+  porqué, no repiten la línea. Sin emojis, sin cajas de `═══`, sin
+  «IMPORTANTE:»/«NOTE:»/«✅» ni párrafos que suenen a IA.
 
 ---
 
